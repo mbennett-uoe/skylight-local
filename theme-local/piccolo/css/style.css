@@ -8,13 +8,19 @@
 
 .footer a{
     color: #ffffff;
+    text-decoration: underline;
+}
+
+.footer a:hover{
+    color: #eeeeee;
+    text-decoration: underline;
 }
 
 .footer .nav { display: inline-block; }
 
 .footer .nav a:hover{
     color: #337AB7;
-    background-color: #ffffff;
+    background-color: #eeeeee;
 }
 
 .results-item {
@@ -55,6 +61,29 @@
 
 div.resized-image img.record-main-image {
     width: 100%;
+}
+
+div.related {
+    margin-top: 20px;
+}
+
+.page-header {
+    margin: 0 0 10px;
+}
+
+.wide {
+    width: 100%;
+}
+.wide a{
+    color: #ffffff;
+}
+
+.wide a:hover{
+    color: #337AB7;
+    background-color: #eeeeee;
+}
+.content{
+    margin-top: 10px;
 }
 
 

@@ -94,30 +94,27 @@
 
 <body>
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12">
-        <a class="navbar-brand" href="http://www.ed.ac.uk" title="The University of Edinburgh Homepage Link" target="_blank"><i class="uoelogo">&nbsp;</i><i class="uoename">&nbsp;</i></a>
+    <div class="header">
+        <div class="container">
+            <a class="navbar-brand" href="http://www.ed.ac.uk" title="The University of Edinburgh Homepage Link" target="_blank"><i class="uoelogo">&nbsp;</i><i class="uoename">&nbsp;</i></a>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-        <nav class="navbar navbar-default">
-            <div class="header brand">
-                <a class="navbar-brand" href="<?php echo base_url(); ?>piccolo"><i class="fa fa-home fa-lg">&nbsp;</i><span class="hidden-xs  collection-name">The Stuart Sound</span></a>
-                <a class="navbar-brand" href="http://www.stcecilias.ed.ac.uk/" title="St Cecilia's Hall Link" target="_blank">&nbsp;<i class="fa fa-university fa-lg">&nbsp;</i><span class="hidden-xs sch-name">St Cecilia's Hall</span></a>
-                <form action="./redirect/" method="post" class="navbar-form navbar-left">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search the collection" name="q" value="<?php if (isset($searchbox_query)) echo urldecode($searchbox_query); ?>" id="q" />
-                        <span class="input-group-btn">
-                            <button type="submit" class="btn btn-primary" name="submit_search" value="Search" id="submit_search"><span class=" glyphicon glyphicon-search"></span></button>
-                        </span>
-                    </div>
-                </form>
+        <div class="wide bg-primary">
+            <div class="container">
+                <div class="navbar-static-top header">
+                    <a class="navbar-brand" href="<?php echo base_url(); ?>piccolo"><i class="fa fa-home fa-lg">&nbsp;</i><span class="hidden-xs  collection-name">The Stuart Sound</span></a>
+                    <a class="navbar-brand" href="http://www.stcecilias.ed.ac.uk/" title="St Cecilia's Hall Link" target="_blank">&nbsp;<i class="fa fa-university fa-lg">&nbsp;</i><span class="hidden-xs sch-name">St Cecilia's Hall</span></a>
+                    <form action="./redirect/" method="post" class="navbar-form navbar-left">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search the collection" name="q" value="<?php if (isset($searchbox_query)) echo urldecode($searchbox_query); ?>" id="q" />
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-primary" name="submit_search" value="Search" id="submit_search"><span class=" glyphicon glyphicon-search"></span></button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </nav>
         </div>
     </div>
-</div>
+
 
 

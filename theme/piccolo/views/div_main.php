@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container content">
     <?php
     if(isset($page_heading)) {
         $page_title = $page_heading;

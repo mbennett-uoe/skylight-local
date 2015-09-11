@@ -1,7 +1,6 @@
+<div class="row related ">
 <div class="col-md-12" >
-
-
-        <?php
+      <?php
         // if there are related items
         if(count($related_items) > 0) { ?>
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -16,9 +15,9 @@
                 }
                 ?>
                     <div class="item <?php if ($i == 0) { echo 'active';}?>">
-                        <div class="col-xs-4">
+                        <div class="col-xs-3">
 
-                            <div class="thumbnail results-thumbnail">
+                            <div class="">
                                 <?php $bitstream_array = array();
 
                                 if(isset($doc[$bitstream_field])) {
@@ -99,15 +98,16 @@
             <?php
                 $i++;
             }?>
+        </div>
             <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-chevron-left text-primary" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
             </a>
             <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-chevron-right text-primary" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
-            </div>
+
             </div>
         <?php
         }
@@ -131,12 +131,15 @@
             }
             next.children(':first-child').clone().appendTo($(this));
 
-            if (next.next().length>0) {
-                next.next().children(':first-child').clone().appendTo($(this));
+            for (var i=0;i<2;i++) {
+                next=next.next();
+                if (!next.length) {
+                    next = $(this).siblings(':first');
+                }
+
+                next.children(':first-child').clone().appendTo($(this));
             }
-            else {
-                $(this).siblings(':first').children(':first-child').clone().appendTo($(this));
-            }
-        });
+        });;
     </script>
 
+</div>
