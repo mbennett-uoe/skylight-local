@@ -26,7 +26,7 @@
     <div class="col-main">
         <div class="row">
             <div class="col-md-9">
-                <h4 class="text-muted">Showing <?php echo $rows ?> results </h4>
+                <h5 class="text-muted">Showing <?php echo $rows ?> results </h5>
             </div>
         </div>
             <?php
@@ -117,22 +117,24 @@
                                 <?php if(isset($doc[$date_field][0])) { echo $doc[$date_field][0];} else { echo 'Unknown';}?>
                             </small>
                             </h4>
-                            <h5>
-                                <?php if(array_key_exists($author_field,$doc)) { ?>
-                                    <?php
-                                    foreach ($doc[$author_field] as $author) {
-                                        $orig_filter = urlencode($author);
-                                        $lower_orig_filter = strtolower($author);
-                                        $lower_orig_filter = urlencode($lower_orig_filter);
-
-                                        echo '<a href="./search/*:*/Maker:%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$author.'</a>';
-                                    }
-                                    ?>
-                                <?php } ?>
-                            </h5>
                             <p class="results_text">
                                 <?php if(isset($doc[$piccolo_field][0])) { echo $doc[$piccolo_field][0];} ?>
                             </p>
+
+                                    <?php if(array_key_exists($author_field,$doc)) { ?>
+                                <h5>
+                                        <?php
+                                        foreach ($doc[$author_field] as $author) {
+                                            $orig_filter = urlencode($author);
+                                            $lower_orig_filter = strtolower($author);
+                                            $lower_orig_filter = urlencode($lower_orig_filter);
+
+                                            echo '<a href="./search/*:*/Maker:%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$author.'</a>';
+                                        }
+                                        ?>
+                                </h5>
+                                    <?php } ?>
+
                             <ul class="nav nav-pills">
                                 <li><a href="./gallery/<?php echo $doc['id']?>" title="Image Gallery link"><i class="fa fa-image fa-lg">&nbsp;</i></a></li>
                                 <li><a href="./videos/<?php echo $doc['id']?>" title="Videos link"><i class="fa fa-video-camera fa-lg">&nbsp;</i></a></li>

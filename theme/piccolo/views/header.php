@@ -18,7 +18,7 @@
     Remove this if you use the .htaccess -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>Stuart Exhibition</title>
+    <title>Stuart Sounds</title>
 
     <meta name="description" content="">
     <meta name="author" content="">
@@ -39,15 +39,13 @@
     <link rel="stylesheet" href="<?php echo base_url()?>assets/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>theme/<?php echo $this->config->item('skylight_theme'); ?>/css/style.css?v=2">
 
-    <!-- Uncomment if you are specifically targeting less enabled mobile browsers
-    <link rel="stylesheet" media="handheld" href="css/handheld.css?v=2">  -->
-
     <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
     <script src="<?php echo base_url()?>assets/modernizr/modernizr-1.7.min.js"></script>
     <script src="<?php echo base_url()?>assets/jquery-1.11.0/jquery-1.11.0.min.js"></script>
     <script src="<?php echo base_url()?>assets/jquery-ui-1.10.4/ui/minified/jquery-ui.min.js"></script>
-    <script src="<?php echo base_url()?>assets/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="<?php echo base_url()?>assets/jquery-1.11.0/jcarousel/jquery.jcarousel.min.js"></script>
+    <script src="<?php echo base_url()?>assets/bootstrap/js/bootstrap.min.js"></script>
+
     <script src="http://www.google-analytics.com/analytics.js"></script>
 
     <!-- Google Analytics -->
@@ -96,7 +94,9 @@
 
     <div class="header">
         <div class="container">
+            <div class="navbar-static-top header">
             <a class="navbar-brand" href="http://www.ed.ac.uk" title="The University of Edinburgh Homepage Link" target="_blank"><i class="uoelogo">&nbsp;</i><i class="uoename">&nbsp;</i></a>
+        </div>
         </div>
         <div class="wide bg-primary">
             <div class="container">

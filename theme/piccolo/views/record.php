@@ -223,7 +223,35 @@ if(isset($solr[$bitstream_field]) && $link_bitstream) {
             } ?>
         </dl>
     </div> <!-- metadata -->
-        <a href="#" title="Back to Search Results" class="btn btn-default" onClick="history.go(-1);"><i class="fa fa-arrow-left">&nbsp;</i>Back to Search Results</a>
 
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <ul id="tabs" class="nav nav-tabs  nav-justified" data-tabs="tabs">
+                <li class="active"><a data-toggle="tab" href="#description"><i class="fa fa-file-text fa-lg">&nbsp;</i>Description</a></li>
+                <li><a data-toggle="tab" href="#maker"><i class="fa fa-industry fa-lg">&nbsp;</i>Maker</a></li>
+                <li><a data-toggle="tab" href="#gallery"><i class="fa fa-image fa-lg">&nbsp;</i>Gallery</a></li>
+                <li><a data-toggle="tab" href="#video"><i class="fa fa-video-camera  fa-lg">&nbsp;</i>Video</a></li>
+                <li><a data-toggle="tab" href="#audio"><i class="fa fa-music fa-lg">&nbsp;</i>Audio</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="description" class="tab-pane fade in active">
+                    <?php include('description.php');?>
+                </div>
+                <div id="maker" class="tab-pane fade">
+                    <?php include('creator.php');?>
+                </div>
+                <div id="gallery" class="tab-pane fade">
+                    <?php include('gallery.php');?>
+                </div>
+                <div id="video" class="tab-pane fade">
+                    <?php include('video.php');?>
+                </div>
+                <div id="audio" class="tab-pane fade">
+                    <?php include('audio.php');?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" title="Back to Search Results" class="btn btn-default" onClick="history.go(-1);"><i class="fa fa-arrow-left">&nbsp;</i>Back to Search Results</a>
 
 </div> <!-- container -->

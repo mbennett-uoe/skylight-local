@@ -16,7 +16,7 @@ $config['skylight_oaipmhcollection'] = 'hdl_10683_22746';
 $config['skylight_oaipmhallowed'] = true;
 
 // Container ID and the field used in solr index to store this ID. Used for restricting search/browse scope.
-$config['skylight_container_id'] = '52';
+$config['skylight_container_id'] = '11';
 $config['skylight_container_field'] = 'location.coll';
 $config['skylight_sitemap_type'] = 'internal';
 
@@ -87,31 +87,23 @@ $config['skylight_recorddisplay'] = array('Alternative Title',
     'Piccolo Description');
 
 $config['skylight_descriptiondisplay'] = array('Alternative Title',
-    'Instrument',
-    'Instrument Family',
-    'Maker','Subject',
     'Abstract',
-    'Place Made',
-    'Date Made',
     'Description',
     'Other Information',
     'Notes',
     'Decorations',
-    'Measurements',
     'Provenance',
-    'Inscription',
-    'Signature',
     'Collection',
-    'Rights Holder',
-    'Accession Number',
+    'Level 2 Description',
+    'Instrument Type Info',
+    'Instrument Type History');
+
+$config['skylight_creatordisplay'] = array('Alternative Title',
+    'Maker',
     'Author Biography',
     'Associated Musician Full',
     'Associated Musician',
-    'Piccolo Description',
-    'Level 2 Description',
-    'Associated Musician Biography',
-    'Instrument Type Info',
-    'Instrument Type History');
+    'Associated Musician Biography',);
 
 $config['skylight_fullrecorddisplay'] = array('Alternative Title',
     'Instrument',

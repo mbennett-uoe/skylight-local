@@ -19,7 +19,7 @@
 .footer .nav { display: inline-block; }
 
 .footer .nav a:hover{
-    color: #337AB7;
+    color: #556D80;
     background-color: #eeeeee;
 }
 
@@ -35,11 +35,11 @@
     margin-top: -5px;}
 
 .uoename  { display: block;
-    width: 253px;
-    height: 25px;
+    width: 235px;
+    height: 24px;
     float: left;
     background: url(../images/uoenamesml.png) no-repeat 0 0;
-    margin-left: 5px;}
+    margin-left: 3px;}
 
 .list-group-item.active a, .list-group-item.active:focus a, .list-group-item.active:hover a {
     color: #FFF;
@@ -79,12 +79,73 @@ div.related {
 }
 
 .wide a:hover{
-    color: #337AB7;
+    color: #70889B;
     background-color: #eeeeee;
 }
+
 .content{
     margin-top: 10px;
 }
+
+.jumbotron {
+    background: url(../images/0023123c-bkg-1140v2.png) no-repeat 0 0;
+    background-color: #556D80;
+    color: #ffffff;
+}
+
+.jumbotron_sml p{
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.bg-primary {
+    background-color: #556D80;
+}
+
+.btn-primary {
+    background-color: #556D80;
+    border-color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #eeeeee;
+    color: #556D80;
+    border-color: #ffffff;
+}
+
+.list-group-item.active {
+    background-color: #556D80;
+    border-color: #556D80;
+}
+
+.list-group-item.active:hover {
+    background-color: #eeeeee;
+    color: #556D80;
+    border-color: #556D80;
+}
+
+.list-group-item.active:hover a{
+    color: #556D80;
+}
+
+.text-primary {
+    color: #556D80;
+}
+
+a {
+    color: #556D80;
+}
+
+.pagination > .active > span {
+    background-color: #556D80;
+    color: #ffffff;
+}
+
+.pagination > li > a {
+    color: #556D80;
+}
+
+
 
 
 
