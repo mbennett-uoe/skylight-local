@@ -43,7 +43,7 @@
         <script src="<?php echo base_url()?>assets/modernizr/modernizr-1.7.min.js"></script>
         <script src="<?php echo base_url()?>assets/jquery-1.11.0/jquery-1.11.0.min.js"></script>
         <script src="<?php echo base_url()?>assets/jquery-ui-1.10.4/ui/minified/jquery-ui.min.js"></script>
-        <script src="<?php echo base_url()?>assets/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="<?php echo base_url()?>assets/bootstrap/js/bootstrap.min.js"></script>
 
         <?php if (isset($solr)) { ?><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
         <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
