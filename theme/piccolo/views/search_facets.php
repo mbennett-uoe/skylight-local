@@ -43,17 +43,18 @@
                     <?php foreach($active_terms as $term) {
                         $pattern =  '#\/'.rawurlencode($facet['name']).':%22'.preg_quote($term['name'],-1).'%22#';
                         $remove = preg_replace($pattern,'',$base_search, -1);
-                        ?><li class="list-group-item">
+                        ?><li class="list-group-item"><span class="badge"><?php echo $term['count']; ?></span>
                         <?php echo $term['display_name'];?>
-                            <span class="badge"><?php echo $term['count']; ?></span>
                             <a class="deselect" href='<?php echo $remove;?>'><i class="fa fa-close"></i>&nbsp;</a></li>
                         <?php
                     }
 
             }
              foreach($inactive_terms as $term) { ?>
-                    <li class="list-group-item"><a href='<?php echo $base_search; ?>/<?php echo $facet['name']; ?>:"<?php echo $term['name']; ?>"<?php echo $base_parameters ?>'><?php echo $term['display_name'];?>
-                        <span class="badge"><?php echo $term['count']; ?></span></a>
+                    <li class="list-group-item">
+                        <span class="badge"><?php echo $term['count']; ?></span>
+                        <a href='<?php echo $base_search; ?>/<?php echo $facet['name']; ?>:"<?php echo $term['name']; ?>"<?php echo $base_parameters ?>'><?php echo $term['display_name'];?>
+                        </a>
                     </li>
                     <?php
                 }
@@ -67,8 +68,9 @@
 
                     if($term['count'] > 0) {
                         ?>
-                        <li class="list-group-item"> <a class="deselect" href='<?php echo $remove; ?>/<?php echo $facet['name']; ?>:<?php echo $term['name']; ?><?php if(isset($operator)) echo '?operator='.$operator; ?>'><?php echo $term['display_name'];?>
-                                <span class="badge"><?php echo $term['count']; ?></span>
+                        <li class="list-group-item">
+                            <span class="badge"><?php echo $term['count']; ?></span>
+                            <a class="deselect" href='<?php echo $remove; ?>/<?php echo $facet['name']; ?>:<?php echo $term['name']; ?><?php if(isset($operator)) echo '?operator='.$operator; ?>'><?php echo $term['display_name'];?>
                             </a></li>
                         <?php
                     }

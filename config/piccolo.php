@@ -16,7 +16,7 @@ $config['skylight_oaipmhcollection'] = 'hdl_10683_22746';
 $config['skylight_oaipmhallowed'] = true;
 
 // Container ID and the field used in solr index to store this ID. Used for restricting search/browse scope.
-$config['skylight_container_id'] = '11';
+$config['skylight_container_id'] = '32';
 $config['skylight_container_field'] = 'location.coll';
 $config['skylight_sitemap_type'] = 'internal';
 
@@ -37,7 +37,7 @@ $config['skylight_fields'] = array(
     'Date Made' => 'dc.coverage.temporal.en',
     'Period' => 'dc.coverage.temporalperiod.en',
     'Accession Number' => 'dc.identifier.en',
-    'Description' => 'dc.description.en',
+    'Technical Description' => 'dc.description.en',
     'Other Information' => 'dc.description.usage.en',
     'Collection' => 'dc.relation.ispartof.en',
     'Notes' => 'dc.description.cataloguernotes',
@@ -54,7 +54,7 @@ $config['skylight_fields'] = array(
     'Associated Musician Full' => 'dc.contributor.assocfull.en',
     'Associated Musician' => 'dc.contributor.assoc.en',
     'Piccolo Description' => 'dc.description.piccolo.en',
-    'Level 2 Description' => 'dc.description.level2.en',
+    'Description' => 'dc.description.level2.en',
     'Associated Musician Biography' => 'dc.contributor.assocbio.en',
     'Instrument Type Info' => 'dc.type.desc.en',
     'Instrument Type History' => 'dc.type.history.en'
@@ -83,29 +83,29 @@ $config['skylight_recorddisplay'] = array('Alternative Title',
     'Inscription',
     'Signature',
     'Rights Holder',
-    'Accession Number',
-    'Piccolo Description');
+    'Accession Number');
 
-$config['skylight_descriptiondisplay'] = array('Alternative Title',
+$config['skylight_descriptiondisplay'] = array(
     'Abstract',
+    'Decorations',
+    //'Provenance',
     'Description',
+    'Technical Description',
     'Other Information',
     'Notes',
-    'Decorations',
-    'Provenance',
     'Collection',
-    'Level 2 Description',
     'Instrument Type Info',
     'Instrument Type History');
 
-$config['skylight_creatordisplay'] = array('Alternative Title',
+$config['skylight_creatordisplay'] = array(
     'Maker',
     'Author Biography',
     'Associated Musician Full',
     'Associated Musician',
     'Associated Musician Biography',);
 
-$config['skylight_fullrecorddisplay'] = array('Alternative Title',
+$config['skylight_fullrecorddisplay'] = array(
+    'Alternative Title',
     'Instrument',
     'Instrument Family',
     'Maker','Subject',
@@ -127,7 +127,7 @@ $config['skylight_fullrecorddisplay'] = array('Alternative Title',
     'Associated Musician Full',
     'Associated Musician',
     'Piccolo Description',
-    'Level 2 Description',
+    'Technical Description',
     'Associated Musician Biography',
     'Instrument Type Info',
     'Instrument Type History');

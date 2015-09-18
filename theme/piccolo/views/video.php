@@ -5,7 +5,11 @@
 
             echo $videoLink;
         }
-        echo '</div><div class="clearfix">';
+        else
+        {
+            echo 'There are no videos';
+        }
     }
+
     ?>
 </div>

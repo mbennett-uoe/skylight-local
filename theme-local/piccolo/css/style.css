@@ -104,13 +104,13 @@ div.related {
 
 .btn-primary {
     background-color: #556D80;
-    border-color: #ffffff;
+    border-color: #eeeeee;
 }
 
 .btn-primary:hover {
     background-color: #eeeeee;
     color: #556D80;
-    border-color: #ffffff;
+    border-color: #eeeeee;
 }
 
 .list-group-item.active {
@@ -143,6 +143,11 @@ a {
 
 .pagination > li > a {
     color: #556D80;
+}
+
+.record-tabs {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 

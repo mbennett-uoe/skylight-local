@@ -4,7 +4,11 @@
         if($audioFile) {
             echo $audioLink;
         }
-        echo '</div><div class="clearfix">';
+        else
+        {
+            echo 'There are no sound recordings';
+        }
     }
+
     ?>
 </div>
