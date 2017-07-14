@@ -1,6 +1,7 @@
 <?php
 
 $author_field = $this->skylight_utilities->getField("Author");
+$acc_no_field = $this->skylight_utilities->getField("Accession Number");
 $title_field = $this->skylight_utilities->getField("Title");
 $maker_field = $this->skylight_utilities->getField("Maker");
 $type_field = $this->skylight_utilities->getField("Type");
@@ -33,7 +34,7 @@ $videoFile = false;
 $audioFile = false;
 $audioLink = "";
 $videoLink = "";
-
+$jsonLink ="";
 if(isset($solr[$bitstream_field]) && $link_bitstream) {
 
     foreach ($solr[$bitstream_field] as $bitstream_for_array) {
@@ -62,12 +63,15 @@ if(isset($solr[$bitstream_field]) && $link_bitstream) {
         $b_handle_id = preg_replace('/^.*\//', '', $b_handle);
         $b_uri = './record/' . $b_handle_id . '/' . $b_seq . '/' . $b_filename;
 
-        if ((strpos($b_uri, ".mp3") > 0) or (strpos($b_uri, ".MP3") > 0)) {
+        if ((strpos($b_uri, ".mp3") > 0) or (strpos($b_uri, ".MP3") > 0))
+        {
             $audioLink .= '<audio controls>';
             $audioLink .= '<source src="' . $b_uri . '" type="audio/mpeg" />Audio loading...';
             $audioLink .= '</audio>';
             $audioFile = true;
-        } else if ((strpos($b_filename, ".mp4") > 0) or (strpos($b_filename, ".MP4") > 0)) {
+        }
+        else if ((strpos($b_filename, ".mp4") > 0) or (strpos($b_filename, ".MP4") > 0))
+        {
             $b_uri = $media_uri . $b_handle_id . '/' . $b_seq . '/' . $b_filename;
             // Use MP4 for all browsers other than Chrome
             if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') == false) {
@@ -83,7 +87,9 @@ if(isset($solr[$bitstream_field]) && $link_bitstream) {
                 $videoLink .= '</video>';
                 $videoFile = true;
             }
-        } else if ((strpos($b_filename, ".webm") > 0) or (strpos($b_filename, ".WEBM") > 0)) {
+        }
+        else if ((strpos($b_filename, ".webm") > 0) or (strpos($b_filename, ".WEBM") > 0))
+        {
             //Microsoft Edge needs to be dealt with. Chrome calls itself Safari too, but that doesn't matter.
             if (strpos($_SERVER['HTTP_USER_AGENT'], 'Edge') == false) {
                 if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') == true) {
@@ -96,6 +102,13 @@ if(isset($solr[$bitstream_field]) && $link_bitstream) {
                     $videoFile = true;
                 }
             }
+        }
+        else if ((strpos($b_uri, ".json") > 0) or (strpos($b_uri, ".JSON") > 0))
+        {
+            $bitstreamLink = $this->skylight_utilities->getBitstreamLink($bitstream);
+            $bitstreamUri = $this->skylight_utilities->getBitstreamUri($bitstream);
+            $jsonLink .= '<a target="_blank" href="'.$bitstreamUri.'"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/International_Image_Interoperability_Framework_logo.png" class="iiiflogo" title="Right-click, Copy Link to get the full IIIF manifest for the image."></a>
+            <a target="_blank" href="'.$bitstreamUri.'"><img src="http://images.is.ed.ac.uk/luna/images/LUNAIIIF80.png" class="lunaiiif" title="Right-click, Copy Link to get the full IIIF manifest for the image."></a>This collection is IIIF-compliant. <a href ="./iiif">See more</a>.';
         }
     }
 }
@@ -302,9 +315,21 @@ if (isset($solr[$link_uri_field]))
 
     ?>
         </div>
+
     <?php
     }
+    if(isset($solr[$acc_no_field])) {
+        $accno =  $solr[$acc_no_field][0];
+    }
+
+    $manifestURI = "https://test.librarylabs.ed.ac.uk/files/".$accno.".json";
     ?>
+
+<div>
+    <p>
+        <?php echo $jsonLink; ?>
+    </p>
+</div>
 </div>
 
 <div id="stc-section3" class="container-fluid">

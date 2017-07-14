@@ -76,11 +76,6 @@
 })(window.document, window.history, window.location);
 
 
-//trying to fix navbar hiding anchored content
-var shiftWindow = function() { scrollBy(0, -100) };
-if (location.hash) shiftWindow();
-window.addEventListener("hashchange", shiftWindow);
-
 
 var currentDiv = "#openseadragon0";
 var currentDivNum = 0;
@@ -138,6 +133,5 @@ e.onmouseover = function() {
 }
 e.onmouseout = function() {
     document.getElementById('gallery-title').style.display = 'none';
-
 }
 
