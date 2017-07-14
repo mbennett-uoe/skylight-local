@@ -108,11 +108,11 @@
                     </ul>
                 </nav>
 
-                    <a href="<?php echo base_url(); ?>"  title="<?php echo $this->config->item('skylight_fullname');?> Home">
+                    <a href="<?php echo base_url(); ?>towardsdolly"  title="<?php echo $this->config->item('skylight_fullname');?> Home">
                         <div id="collection-logo">
                         </div>
                     </a>
-                    <a href="<?php echo base_url(); ?>"  title="<?php echo $this->config->item('skylight_fullname');?> Home">
+                    <a href="<?php echo base_url(); ?>towardsdolly"  title="<?php echo $this->config->item('skylight_fullname');?> Home">
                         <div id="collection-title">
                         </div>
                     </a>

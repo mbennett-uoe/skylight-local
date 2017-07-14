@@ -39,6 +39,7 @@
     <link rel="stylesheet" href="http://releases.flowplayer.org/6.0.4/skin/minimalist.css">
     <link rel="stylesheet" href="<?php echo base_url()?>assets/font-awesome/css/font-awesome.min.css">
 
+
     <!-- Uncomment if you are specifically targeting less enabled mobile browsers
     <link rel="stylesheet" media="handheld" href="css/handheld.css?v=2">  -->
 
@@ -49,6 +50,7 @@
     <script src="<?php echo base_url()?>assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="<?php echo base_url()?>assets/jquery-1.11.0/jcarousel/jquery.jcarousel.min.js"></script>
     <script src="http://www.google-analytics.com/analytics.js"></script>
+    <script src="<?php echo base_url()?>assets/openseadragon/openseadragon.min.js"></script>
 
     <!-- Google Analytics -->
     <script>

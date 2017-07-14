@@ -28,7 +28,7 @@
                         $component_id = $doc["component_id"];
                         echo'<div class="component_id">' . $component_id . '</div>';
                     } ?>
-                    <?php echo $doc["dates"]; ?>
+                    <?php echo $doc["dates"]["expression"]; ?>
                 </li>
             <?php }
 

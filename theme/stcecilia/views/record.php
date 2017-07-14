@@ -1,12 +1,22 @@
 <?php
 
 $author_field = $this->skylight_utilities->getField("Author");
+$acc_no_field = $this->skylight_utilities->getField("Accession Number");
+$title_field = $this->skylight_utilities->getField("Title");
 $maker_field = $this->skylight_utilities->getField("Maker");
 $type_field = $this->skylight_utilities->getField("Type");
 $bitstream_field = $this->skylight_utilities->getField("Bitstream");
 $thumbnail_field = $this->skylight_utilities->getField("Thumbnail");
 $filters = array_keys($this->config->item("skylight_filters"));
-$link_uri_field = $this->skylight_utilities->getField("Link");
+$placedisplay = $this->config->item("skylight_placedisplay");
+$measurementdisplay = $this->config->item("skylight_measurementdisplay");
+$associationdisplay = $this->config->item("skylight_associationdisplay");
+$locationdisplay = $this->config->item("skylight_locationdisplay");
+$datedisplay = $this->config->item("skylight_datedisplay");
+$identificationdisplay = $this->config->item("skylight_identificationdisplay");
+$descriptiondatadisplay = $this->config->item("skylight_descriptiondatadisplay");
+$typedisplay = $this->config->item("skylight_typedisplay");
+$link_uri_field = $this->skylight_utilities->getField("ImageURI");
 $short_field = $this->skylight_utilities->getField("Short Description");
 $date_field = $this->skylight_utilities->getField("Date");
 $media_uri = $this->config->item("skylight_media_url_prefix");
@@ -22,12 +32,12 @@ $image_id = "";
 $mainImage = false;
 $videoFile = false;
 $audioFile = false;
-
-
+$audioLink = "";
+$videoLink = "";
+$jsonLink ="";
 if(isset($solr[$bitstream_field]) && $link_bitstream) {
 
-    foreach ($solr[$bitstream_field] as $bitstream_for_array)
-    {
+    foreach ($solr[$bitstream_field] as $bitstream_for_array) {
         $b_segments = explode("##", $bitstream_for_array);
         $b_seq = $b_segments[4];
         $bitstream_array[$b_seq] = $bitstream_for_array;
@@ -38,86 +48,23 @@ if(isset($solr[$bitstream_field]) && $link_bitstream) {
     $mainImage = false;
     $videoFile = false;
     $audioFile = false;
-    $audioLink = "";
-    $videoLink = "";
-    $b_seq =  "";
 
-    foreach($bitstream_array as $bitstream) {
+    $b_seq = "";
+
+    foreach ($bitstream_array as $bitstream) {
         $mp4ok = false;
         $b_segments = explode("##", $bitstream);
         $b_filename = $b_segments[1];
-        if($image_id == "") {
-            $image_id = substr($b_filename,0,7);
+        if ($image_id == "") {
+            $image_id = substr($b_filename, 0, 7);
         }
         $b_handle = $b_segments[3];
         $b_seq = $b_segments[4];
-        $b_handle_id = preg_replace('/^.*\//', '',$b_handle);
-        $b_uri = './record/'.$b_handle_id.'/'.$b_seq.'/'.$b_filename;
+        $b_handle_id = preg_replace('/^.*\//', '', $b_handle);
+        $b_uri = './record/' . $b_handle_id . '/' . $b_seq . '/' . $b_filename;
 
-        if ((strpos($b_uri, ".jpg") > 0) or (strpos($b_uri, ".JPG") > 0))
+        if ((strpos($b_uri, ".mp3") > 0) or (strpos($b_uri, ".MP3") > 0))
         {
-            if (!$mainImage) {
-
-                // we have a main image
-                $mainImageTest = true;
-
-                $bitstreamLink = '<div class="main-image">';
-                $bitstreamLink .= '<a title = "' . $record_title . '" class="fancybox" rel="group" href="' . $b_uri . '"> ';
-                $fullurl = base_url().$theme.'/'.$b_uri;
-
-                list($width, $height) = getImageSize($fullurl);
-	        if (isset($solr[$link_uri_field]))
-                {
-                    foreach($solr[$link_uri_field] as $linkURI) {
-
-                      if (strpos($linkURI, 'luna') > 0) {
-
-                          $iiif_uri = str_replace("images.is.ed.ac.uk", "lac-luna-test2.is.ed.ac.uk:8181",$linkURI);
-                          $iiif_uri =  str_replace("detail", "iiif", $iiif_uri);
-                          $iiif_uri =  $iiif_uri.'/full/!200,200/0/default.jpg';
-			
-			}
-		     }
-		}
-                if ($width > $height)
-                {
-		   $bitstreamLink .= '<img class="record-main-image-landscape" src = "'. $iiif_uri .'">';
-                }
-                else
-                {
-                    $bitstreamLink .= '<img class="record-main-image-portrait" src = "'. $iiif_uri .'">';
-                }
-                $bitstreamLink .= '</a>';
-                $bitstreamLink .= '</div>';
-
-                $mainImage = true;
-            }
-            // we need to display a thumbnail
-            else {
-                // if there are thumbnails
-                if(isset($solr[$thumbnail_field])) {
-                    foreach ($solr[$thumbnail_field] as $thumbnail) {
-
-                        $t_segments = explode("##", $thumbnail);
-                        $t_filename = $t_segments[1];
-
-                        if ($t_filename === $b_filename . ".jpg") {
-
-                            $t_handle = $t_segments[3];
-                            $t_seq = $t_segments[4];
-                            $t_uri = './record/'.$b_handle_id.'/'.$t_seq.'/'.$t_filename;
-
-                            $thumbnailLink[$numThumbnails] = '<a title = "' . $record_title . '" class="fancybox" rel="group" href="' . $b_uri . '"> ';
-                            $thumbnailLink[$numThumbnails] .= '<img src = "'.$t_uri.'" title="'. $record_title .'" /></a>';
-
-                            $numThumbnails++;
-                        }
-                    }
-                }
-            }
-        }
-        else if ((strpos($b_uri, ".mp3") > 0) or (strpos($b_uri, ".MP3") > 0)) {
-
             $audioLink .= '<audio controls>';
             $audioLink .= '<source src="' . $b_uri . '" type="audio/mpeg" />Audio loading...';
             $audioLink .= '</audio>';
@@ -125,228 +72,737 @@ if(isset($solr[$bitstream_field]) && $link_bitstream) {
         }
         else if ((strpos($b_filename, ".mp4") > 0) or (strpos($b_filename, ".MP4") > 0))
         {
-            $b_uri = $media_uri.$b_handle_id.'/'.$b_seq.'/'.$b_filename;
+            $b_uri = $media_uri . $b_handle_id . '/' . $b_seq . '/' . $b_filename;
             // Use MP4 for all browsers other than Chrome
-            if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') == false)
-            {
+            if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') == false) {
+                $mp4ok = true;
+            } //Microsoft Edge is calling itself Chrome, Mozilla and Safari, as well as Edge, so we need to deal with that.
+            else if (strpos($_SERVER['HTTP_USER_AGENT'], 'Edge') == true) {
                 $mp4ok = true;
             }
-            //Microsoft Edge is calling itself Chrome, Mozilla and Safari, as well as Edge, so we need to deal with that.
-            else if (strpos($_SERVER['HTTP_USER_AGENT'], 'Edge') == true)
-            {
-                $mp4ok = true;
-            }
-
-            if ($mp4ok == true)
-            {
+            if ($mp4ok == true) {
                 $videoLink .= '<div class="flowplayer" data-analytics="' . $ga_code . '" title="' . $record_title . ": " . $b_filename . '">';
                 $videoLink .= '<video preload=auto loop width="100%" height="auto" controls preload="true" width="660">';
                 $videoLink .= '<source src="' . $b_uri . '" type="video/mp4" />Video loading...';
                 $videoLink .= '</video>';
-                $videoLink .= '</div>';
                 $videoFile = true;
             }
         }
-
         else if ((strpos($b_filename, ".webm") > 0) or (strpos($b_filename, ".WEBM") > 0))
         {
             //Microsoft Edge needs to be dealt with. Chrome calls itself Safari too, but that doesn't matter.
-            if (strpos($_SERVER['HTTP_USER_AGENT'], 'Edge') == false)
-            {
-                if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') == true)
-                {
+            if (strpos($_SERVER['HTTP_USER_AGENT'], 'Edge') == false) {
+                if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') == true) {
                     $b_uri = $media_uri . $b_handle_id . '/' . $b_seq . '/' . $b_filename;
                     // if it's chrome, use webm if it exists
                     $videoLink .= '<div class="flowplayer" data-analytics="' . $ga_code . '" title="' . $record_title . ": " . $b_filename . '">';
                     $videoLink .= '<video preload=auto loop width="100%" height="auto" controls preload="true" width="660">';
                     $videoLink .= '<source src="' . $b_uri . '" type="video/webm" />Video loading...';
                     $videoLink .= '</video>';
-                    $videoLink .= '</div>';
                     $videoFile = true;
                 }
             }
         }
-        else if ((strpos($b_uri, ".pdf") > 0) or (strpos($b_uri, ".PDF") > 0)) {
-
+        else if ((strpos($b_uri, ".json") > 0) or (strpos($b_uri, ".JSON") > 0))
+        {
             $bitstreamLink = $this->skylight_utilities->getBitstreamLink($bitstream);
             $bitstreamUri = $this->skylight_utilities->getBitstreamUri($bitstream);
-            $pdfLink .= 'Click ' . $bitstreamLink . 'to download. (<span class="bitstream_size">' . getBitstreamSize($bitstream) . '</span>)';
+            $jsonLink .= '<a target="_blank" href="'.$bitstreamUri.'"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/International_Image_Interoperability_Framework_logo.png" class="iiiflogo" title="Right-click, Copy Link to get the full IIIF manifest for the image."></a>
+            <a target="_blank" href="'.$bitstreamUri.'"><img src="http://images.is.ed.ac.uk/luna/images/LUNAIIIF80.png" class="lunaiiif" title="Right-click, Copy Link to get the full IIIF manifest for the image."></a>This collection is IIIF-compliant. <a href ="./iiif">See more</a>.';
         }
     }
 }
 ?>
 
-<div class="row container">
-    <div class="content">
-
-
-        <?php if($mainImageTest === true) {
-            if (isset($solr[$link_uri_field]))
-            {
-                foreach($solr[$link_uri_field] as $linkURI) {
-
-                    if (strpos($linkURI, 'luna') > 0) {
-                        //just for test, this line!
-                        $tileSource = str_replace('images.is.ed.ac.uk', 'lac-luna-test2.is.ed.ac.uk:8181', $linkURI);
-                        $tileSource = str_replace('detail', 'iiif', $tileSource) . '/info.json';
-                    }
-                }
-            }
-?>
-                    <div class="col-md-6 hidden-sm hidden-xs full-image ">
-
-                         <div id="openseadragon1" style="width: 1110px; height: 600px;"><script type="text/javascript">
-                                OpenSeadragon({
-                                    id:                 "openseadragon1",
-                                    prefixUrl:          "assets/openseadragon/images/",
-                                    preserveViewport:   true,
-                                    visibilityRatio:    1,
-                                    minZoomLevel:       1,
-                                    defaultZoomLevel:   1,
-                                    sequenceMode:       true,
-                                    tileSources:        "<?php echo $tileSource;?>"
-
-                                });
-                            </script>
-                         </div>
-
-                        <br />
-                        <a title="Back to Search Results" class="btn btn-default" onClick="history.go(-1);"><i class="fa fa-arrow-left">&nbsp;</i>Back to Search Results</a>
-
-                    </div>
-
-                    <div class="col-sm-6 hidden-lg hidden-md resized-image">
-                        <?php echo str_replace("group", "group-small", $bitstreamLink); ?>
-                        <br />
-                        <a title="Back to Search Results" class="btn btn-default" onClick="history.go(-1);"><i class="fa fa-arrow-left">&nbsp;</i>Back to Search Results</a>
-
-                    </div>
+<nav class="navbar navbar-fixed-top second-navbar">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#record-navbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div>
+            <div class="collapse navbar-collapse" id="record-navbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="<?php echo $_SERVER['REQUEST_URI'];?>#stc-section1">Top</a></li>
+                    <li><a href="<?php echo $_SERVER['REQUEST_URI'];?>#stc-section2">Image</a></li>
+                    <li><a href="<?php echo $_SERVER['REQUEST_URI'];?>#stc-section3">Description</a></li>
+                    <?php if($audioLink != '') {
+                        echo '<li ><a href ="'.$_SERVER['REQUEST_URI'].'#stc-section4" >Audio</a ></li >';
+                    } ?>
+                    <li><a href="<?php echo $_SERVER['REQUEST_URI'];?>#stc-section5">Instrument Data</a></li>
+                    <li><a href="<?php echo $_SERVER['REQUEST_URI'];?>#stc-section6">Related Instruments</a></li>
+                </ul>
             </div>
+        </div>
+    </div>
+</nav>
+<?php
+
+
+foreach($recorddisplay as $key)
+{
+    $element = $this->skylight_utilities->getField($key);
+
+    if(isset($solr[$element]))
+    {
+        foreach($solr[$element] as $index => $metadatavalue)
+        {
+            // if it's a facet search
+            // make it a clickable search link
+
+            if($key == 'Date Made') {
+                $date = $metadatavalue;
+            }
+            if (!(isset($date))){
+                $date = 'Undated';
+            }
+            if($key == 'Maker') {
+                $maker = $metadatavalue;
+            }
+            if (!(isset($maker))){
+                $maker = 'Unknown maker';
+            }
+            if($key == 'Title') {
+                $title = $metadatavalue;
+            }
+            if (!(isset($title))){
+                $title = 'Unnamed item';
+            }
+        }
+    }
+}
+
+?>
+
+<div id="stc-section1" class="container-fluid record-content">
+    <h2 class="itemtitle hidden-sm hidden-xs"><?php echo $title .' | '. $maker. ' | '.$date;?></h2>
+    <h4 class="itemtitle hidden-lg hidden-md"><?php echo $title .' | '. $maker. ' | '.$date;?></h4>
+</div>
+
+<div id="stc-section2" class="container-fluid">
+<?php
+if (isset($solr[$link_uri_field]))
+{
+    $imageCounter = 0;
+    foreach($solr[$link_uri_field] as $linkURI)
+    {
+        $tileSource = str_replace('full/full/0/default.jpg', 'info.json', $linkURI);
+        $json =  file_get_contents($tileSource);
+        $jobj = json_decode($json, true);
+        $error = json_last_error();
+
+        $jsoncontext[$imageCounter] = $jobj['@context'];
+        $jsonid[$imageCounter] = $jobj['@id'];
+        $jsonheight[$imageCounter] = $jobj['height'];
+        $jsonwidth[$imageCounter] = $jobj['width'];
+        $jsonprotocol[$imageCounter] = $jobj['protocol'];
+        $jsontiles[$imageCounter]= $jobj['tiles'];
+        $jsonprofile[$imageCounter] = $jobj['profile'];
+
+        list($width, $height) = getimagesize($linkURI);
+        //echo 'WIDTH'.$width.'HEIGHT'.$height
+        $portrait = true;
+        if ($width > $height)
+        {
+            $jsontilesize[$imageCounter] = $jsontiles[$imageCounter][0]['width'];
+            $portrait = false;
+        }
+        else
+        {
+            $jsontilesize[$imageCounter] = $jsontiles[$imageCounter][0]['height'];
+        }
+        $imageCounter++;
+    }
+
+    echo "<div id='imageCounter' style='display:none;'>$imageCounter</div>";
+?>
+
+
+    <div id='toolbarDiv'>
+        <div class='toolbarItem' id='zoom-in'></div><div class='toolbarItem' id='zoom-out'></div><div class='toolbarItem' id='home'></div><div class='toolbarItem' id='full-page'></div><?php if($imageCounter > 1){ ?><div class='toolbarItem image-toggler' id='prev' data-image-id="#openseadragon<?php echo ($imageCounter - 1);?>"></div><div class='toolbarItem image-toggler' id='next' data-image-id="#openseadragon1"><?php } ?></div>
     </div>
 
-        <?php } ?>
-        <div class="col-sm-6 col-xs-12 col-md-8 col-lg-12 metadata">
-            <?php if(isset($solr[$short_field][0])) {
-                echo '<p>' . $solr[$short_field][0] . '</p>';
-            }
-            ?>
+    <div class="col-lg-12 main-image">
 
-            <!--<dl>-->
-                <?php
-                $maker = '';
-                $date = '';
-                $title = '';
-
-                foreach($recorddisplay as $key) {
-
-                    $element = $this->skylight_utilities->getField($key);
-
-                    if(isset($solr[$element])) {
-
-
-                       //echo '<dd>';
-                        foreach($solr[$element] as $index => $metadatavalue) {
-                            // if it's a facet search
-                            // make it a clickable search link
-
-                            if($key == 'Date Made') {
-                                $date = $metadatavalue;
-                            }
-
-                            if($key == 'Maker') {
-                                $maker = $metadatavalue;
-                            }
-                        }
-                        //echo '</dd>';
-                    }
-                }
-
-                $title_len = strlen($record_title);
-                $dotpos = strpos($record_title, ".");
-                $dotpos++;
-                if ($title_len == $dotpos)
-                {
-                    $title = substr($record_title,0,$dotpos-1);
-                }
-                else{
-                    $title = $record_title;
-                }
-
-                ?>
-                <div class="page-header">
-                    <h2 class="itemtitle hidden-sm hidden-xs"><?php echo $title .' / '. $maker. ' / '.$date;?></h2>
-                    <h4 class="itemtitle hidden-lg hidden-md"><?php echo $title .' / '. $maker. ' / '.$date;?></h4>
-                    <br>
-                    <h2 class="itemtitle hidden-sm hidden-xs">Tags</h2>
-                </div>
-               <!-- <div class = "alltags">-->
-
-
-                <?php
-                foreach($recorddisplay as $key) {
-
-                    $element = $this->skylight_utilities->getField($key);
-
-                    if(isset($solr[$element])) {
-
-                       // echo '<dt>' . $key . '</dt>';
-
-                        //echo '<dd>';
-                        foreach($solr[$element] as $index => $metadatavalue) {
-                            echo '<div class="tags">';
-
-                            // if it's a facet search
-                            // make it a clickable search link
-                            if(in_array($key, $filters)) {
-                                if (!strpos($metadatavalue, "/")> 0)
+        <?php  $divCounter = 0;
+        $freshIn = true;
+        while ($divCounter < $imageCounter)
+        {?>
+            <div id="openseadragon<?php echo $divCounter; ?>" class="image-toggle"<?php if (!$freshIn) { echo ' style="display:none;"'; } else { echo ' style="display:block;"'; }?>>
+                <script type="text/javascript">
+                    OpenSeadragon({
+                        id: "openseadragon<?php echo $divCounter;?>",
+                        prefixUrl: "<?php echo base_url() ?>theme/stcecilia/images/buttons/",
+                        zoomPerScroll: 1,
+                        toolbar:       "toolbarDiv",
+                        showNavigator:  true,
+                        autoHideControls: false,
+                        zoomInButton:   "zoom-in",
+                        zoomOutButton:  "zoom-out",
+                        homeButton:     "home",
+                        fullPageButton: "full-page",
+                        nextButton:     "next",
+                        previousButton: "previous",
+                        tileSources: [{
+                            "@context": "<?php echo $jsoncontext[$divCounter] ?>",
+                            "@id": "<?php echo $jsonid[$divCounter] ?>",
+                            "height": <?php echo $jsonheight[$divCounter] ?>,
+                            "width": <?php echo $jsonwidth[$divCounter] ?>,
+                            "profile": ["http://iiif.io/api/image/2/level2.json",
                                 {
-                                    $orig_filter = urlencode($metadatavalue);
-                                    $lower_orig_filter = strtolower($metadatavalue);
-                                    $lower_orig_filter = urlencode($lower_orig_filter);
-
-                                    echo '<a href="./search/*:*/' . $key . ':%22' . $lower_orig_filter . '%7C%7C%7C' . $orig_filter . '%22">' . $metadatavalue . '</a>';
+                                    "formats": ["jpg"]
                                 }
-                            }
-                            echo '</div>';
+                            ],
+                            "protocol": "<?php echo $jsonprotocol[$divCounter] ?>",
+                            "tiles": [{
+                                "scaleFactors": [1, 2, 8, 16, 32],
+                                "width": "<?php echo $jsontiles[$divCounter][0]['width'];?>",
+                                "height": "<?php echo $jsontiles[$divCounter][0]['height'];?>"
+                            }],
+                            "tileSize":<?php echo $jsontilesize[$divCounter];?>
+                        }]
+                    });
+                </script>
+            </div>
 
-                            //else {
-                            //    echo $metadatavalue;
-                          //  }
-                           /*
-                            if($index < sizeof($solr[$element]) - 1) {
+            <?php
+            $divCounter++;
+            $freshIn = false;
+        }
+        ?>
+    </div>
 
-                                echo '; ';
-                            }*/
-                        }
-                       // echo '</dd>';
-                    }
-                }?>
-               <!--</div>-->
-            </dl>
 
+    <?php
+    $numThumbnails = 0;
+    $imageset = false;
+    $thumbnailLink = array();
+
+    $countThumbnails = count($solr[$link_uri_field]);
+    echo '<div class="thumb-strip">';
+    if ($countThumbnails > 1)
+    {
+        foreach ($solr[$link_uri_field] as $linkURI)
+        {
+            $linkURI = $solr[$link_uri_field][$numThumbnails];
+
+            $thumbnailLink[$numThumbnails] = '<label class="image-toggler" data-image-id="#openseadragon'.$numThumbnails.'">';
+            $thumbnailLink[$numThumbnails] .= '<input type="radio" name="options" id="option'.$numThumbnails.'">';
+
+            list($width, $height) = getimagesize($linkURI);
+            $portrait = true;
+            if ($width > $height)
+            {
+                $portrait = false;
+            }
+            if ($portrait)
+            {
+                $thumbnailLink[$numThumbnails] .= '<img src = "' . $linkURI . '" class="record-thumb-strip" title="' . $solr[$title_field][0] . '" /></label>';
+            } else
+            {
+                $thumbnailLink[$numThumbnails] .= '<img src = "' . $linkURI . '" class="record-thumb-strip" title="' . $solr[$title_field][0] . '" /></label>';
+            }
+
+            echo $thumbnailLink[$numThumbnails];
+            $numThumbnails++;
+            $imageset = true;
+
+        }
+    }
+
+    ?>
         </div>
 
-		<p class="trigger"><a href="#">More data</a></p>
+    <?php
+    }
+    if(isset($solr[$acc_no_field])) {
+        $accno =  $solr[$acc_no_field][0];
+    }
 
-		
-<div class="toggle_container">
-   <div class="block">
-<?php 
-$json =  file_get_contents($tileSource);
+    $manifestURI = "https://test.librarylabs.ed.ac.uk/files/".$accno.".json";
+    ?>
 
-	$jobj = json_decode($json, true);
-	$error = json_last_error();
+<div>
+    <p>
+        <?php echo $jsonLink; ?>
+    </p>
+</div>
+</div>
 
-	foreach($jobj['metadata'] as $item)
-	{
-		echo '<p>'.$item['label'].': <strong>'.$item['value'].'</strong></p>';
-		
-	}
+<div id="stc-section3" class="container-fluid">
+    <!--TODO Display Short description and description-->
+    <div class="col-description">
+        <?php foreach($descriptiondisplay as $key) {
 
-	
+            $element = $this->skylight_utilities->getField($key);
 
-?>
+            if(isset($solr[$element])) {
+                foreach($solr[$element] as $index => $metadatavalue) {
+                    if ($key == "Short Description" or $key == "Description") {
+                        echo "<span class='description'>";
+                        echo $metadatavalue;
+                        echo "</span>";
+                    }
+                }
+            }
+        } ?>
     </div>
-	</div>
-    </div><!-- content-->
-</div> <!-- row container-->
+
+    <?php
+    foreach($recorddisplay as $key) {
+
+        $element = $this->skylight_utilities->getField($key);
+
+        if(isset($solr[$element])) {
+
+            foreach($solr[$element] as $index => $metadatavalue) {
+                echo '<div class="stc-tags">';
+
+                // if it's a facet search
+                // make it a clickable search link
+                if(in_array($key, $filters)) {
+                    if (!strpos($metadatavalue, "/")> 0)
+                    {
+                        $orig_filter = urlencode($metadatavalue);
+                        $lower_orig_filter = strtolower($metadatavalue);
+                        $lower_orig_filter = urlencode($lower_orig_filter);
+
+                        echo '<a href="./search/*:*/' . $key . ':%22' . $lower_orig_filter . '%7C%7C%7C' . $orig_filter . '%22">' . $metadatavalue . '</a>';
+                    }
+                }
+                echo '</div>';
+
+            }
+        }
+    }
+    ?>
+</div>
+<?php
+
+if(isset($solr[$bitstream_field]) && $link_bitstream) {
+
+    if (!$audioLink == '')
+    {
+        echo '<div id="stc-section4" class="container-fluid">
+            <!--h1 class="itemtitle hidden-sm hidden-xs">Audio/Visual</h1-->
+            <!--h4 class="itemtitle hidden-lg hidden-md">Audio/Visual</h4-->'.
+            $audioLink . '</div>';
+    }
+}
+?>
+
+<div id="stc-section5" class="panel panel-default container-fluid">
+    <div class="panel-heading straight-borders">
+        <h2 class="panel-title hidden-sm hidden-xs ">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapse1">Instrument Data <i class="fa fa-chevron-down" aria-hidden="true"></i>
+            </a>
+        </h2>
+        <h4 class="panel-title hidden-md hidden-lg ">
+            <a class="accordion-toggle" data-toggle="collapse" href="#collapse1">Instrument Data <i class="fa fa-chevron-down" aria-hidden="true"></i>
+
+            </a>
+        </h4>
+    </div>
+    <div id="collapse1" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="col-sm-6 col-xs-12 col-md-8 col-lg-12 metadata">
+
+                <div id="info-box">
+
+                    <h3>Identification Information</h3>
+                    <dl class="dl-horizontal">
+                        <?php
+                        $infofound = false;
+                        foreach($identificationdisplay as $key) {
+
+                            $element = $this->skylight_utilities->getField($key);
+
+                            if(isset($solr[$element])) {
+
+                                echo '<dt>' . $key . '</dt>';
+
+                                echo '<dd>';
+                                foreach($solr[$element] as $index => $metadatavalue) {
+                                    // if it's a facet search
+                                    // make it a clickable search link
+                                    if(in_array($key, $filters)) {
+
+                                        $orig_filter = urlencode($metadatavalue);
+                                        $lower_orig_filter = strtolower($metadatavalue);
+                                        $lower_orig_filter = urlencode($lower_orig_filter);
+
+                                        echo '<a href="./search/*:*/' . $key . ':%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$metadatavalue.'</a>';
+                                    }
+                                    else {
+                                        echo $metadatavalue;
+                                    }
+                                    if($index < sizeof($solr[$element]) - 1) {
+
+                                        echo '; ';
+                                    }
+                                }
+                                $infofound = true;
+                                echo '</dd>';
+                            }
+                        }
+                        if (!$infofound) {
+                            echo '<p>No information recorded.</p>';
+                        }?>
+                    </dl>
+                </div> <!-- main-info -->
+
+                <div id="info-box">
+                    <h3>Date Information</h3>
+                    <dl class="dl-horizontal">
+                        <?php
+                            $infofound = false;
+                            foreach($datedisplay as $key) {
+
+                            $element = $this->skylight_utilities->getField($key);
+
+                            if(isset($solr[$element])) {
+
+                                echo '<dt>' . $key . '</dt>';
+
+                                echo '<dd>';
+                                foreach($solr[$element] as $index => $metadatavalue) {
+                                    // if it's a facet search
+                                    // make it a clickable search link
+                                    if(in_array($key, $filters)) {
+
+                                        $orig_filter = urlencode($metadatavalue);
+                                        $lower_orig_filter = strtolower($metadatavalue);
+                                        $lower_orig_filter = urlencode($lower_orig_filter);
+
+                                        echo '<a href="./search/*:*/' . $key . ':%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$metadatavalue.'</a>';
+                                    }
+                                    else {
+                                        echo $metadatavalue;
+                                    }
+
+                                    if($index < sizeof($solr[$element]) - 1) {
+
+                                        echo '; ';
+                                    }
+                                }
+                                $infofound = true;
+                                echo '</dd>';
+                            }
+
+                        }
+                        if (!$infofound) {
+                            echo '<p>No information recorded.</p>';
+                        }
+                        ?>
+                    </dl>
+                </div> <!-- meta-info -->
+
+                <div id="info-box">
+                    <h3>Maker</h3>
+                    <dl class="dl-horizontal">
+                        <?php
+                        $infofound = false;
+                        foreach($creatordisplay as $key) {
+
+                            $element = $this->skylight_utilities->getField($key);
+
+                            if(isset($solr[$element])) {
+
+                                echo '<dt>' . $key . '</dt>';
+
+                                echo '<dd>';
+                                foreach($solr[$element] as $index => $metadatavalue) {
+                                    // if it's a facet search
+                                    // make it a clickable search link
+                                    if(in_array($key, $filters)) {
+
+                                        $orig_filter = urlencode($metadatavalue);
+                                        $lower_orig_filter = strtolower($metadatavalue);
+                                        $lower_orig_filter = urlencode($lower_orig_filter);
+
+                                        echo '<a href="./search/*:*/' . $key . ':%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$metadatavalue.'</a>';
+                                    }
+                                    else {
+                                        echo $metadatavalue;
+                                    }
+                                    if($index < sizeof($solr[$element]) - 1) {
+
+                                        echo '; ';
+                                    }
+                                }
+                                $infofound = true;
+                                echo '</dd>';
+                            }
+                        }
+                        if (!$infofound) {
+                            echo '<p>No information recorded.</p>';
+                        }?>
+                    </dl>
+                </div> <!-- creator-info -->
+
+                <div id="info-box">
+                    <h3>Production Place</h3>
+                    <dl class="dl-horizontal">
+                        <?php
+                        $infofound = false;
+                        foreach($placedisplay as $key) {
+
+                            $element = $this->skylight_utilities->getField($key);
+
+                            if(isset($solr[$element])) {
+
+                                echo '<dt>' . $key . '</dt>';
+
+                                echo '<dd>';
+                                foreach($solr[$element] as $index => $metadatavalue) {
+                                    // if it's a facet search
+                                    // make it a clickable search link
+                                    if(in_array($key, $filters)) {
+
+                                        $orig_filter = urlencode($metadatavalue);
+                                        $lower_orig_filter = strtolower($metadatavalue);
+                                        $lower_orig_filter = urlencode($lower_orig_filter);
+
+                                        echo '<a href="./search/*:*/' . $key . ':%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$metadatavalue.'</a>';
+                                    }
+                                    else {
+                                        echo $metadatavalue;
+                                    }
+                                    if($index < sizeof($solr[$element]) - 1) {
+
+                                        echo '; ';
+                                    }
+                                }
+                                $infofound = true;
+                                echo '</dd>';
+                            }
+                        }
+                        if (!$infofound) {
+                            echo '<p>No information recorded.</p>';
+                        }?>
+                    </dl>
+                </div> <!--place-info -->
+
+                <div id="info-box">
+                    <h3>Object Type Information</h3>
+                    <dl class="dl-horizontal">
+                        <?php
+                        $infofound = false;
+                        foreach($typedisplay as $key) {
+
+                            $element = $this->skylight_utilities->getField($key);
+
+                            if(isset($solr[$element])) {
+
+                                echo '<dt>' . $key . '</dt>';
+
+                                echo '<dd>';
+                                foreach($solr[$element] as $index => $metadatavalue) {
+                                    // if it's a facet search
+                                    // make it a clickable search link
+                                    if(in_array($key, $filters)) {
+
+                                        $orig_filter = urlencode($metadatavalue);
+                                        $lower_orig_filter = strtolower($metadatavalue);
+                                        $lower_orig_filter = urlencode($lower_orig_filter);
+
+                                        echo '<a href="./search/*:*/' . $key . ':%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$metadatavalue.'</a>';
+                                    }
+                                    else {
+                                        echo $metadatavalue;
+                                    }
+                                    if($index < sizeof($solr[$element]) - 1) {
+
+                                        echo '; ';
+                                    }
+                                }
+                                $infofound = true;
+                                echo '</dd>';
+                            }
+                        }
+                        if (!$infofound) {
+                            echo '<p>No information recorded.</p>';
+                        }?>
+                    </dl>
+                </div> <!--type-info -->
+
+                <div id="info-box">
+                    <h3>Location</h3>
+                    <dl class="dl-horizontal">
+                        <?php
+                        $infofound = false;
+                        foreach($locationdisplay as $key) {
+
+                            $element = $this->skylight_utilities->getField($key);
+
+                            if(isset($solr[$element])) {
+
+                                echo '<dt>' . $key . '</dt>';
+
+                                echo '<dd>';
+                                foreach($solr[$element] as $index => $metadatavalue) {
+                                    // if it's a facet search
+                                    // make it a clickable search link
+                                    if(in_array($key, $filters)) {
+
+                                        $orig_filter = urlencode($metadatavalue);
+                                        $lower_orig_filter = strtolower($metadatavalue);
+                                        $lower_orig_filter = urlencode($lower_orig_filter);
+
+                                        echo '<a href="./search/*:*/' . $key . ':%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$metadatavalue.'</a>';
+                                    }
+                                    else {
+                                        echo $metadatavalue;
+                                    }
+                                    if($index < sizeof($solr[$element]) - 1) {
+
+                                        echo '; ';
+                                    }
+                                }
+                                $infofound = true;
+                                echo '</dd>';
+                            }
+                        }
+                        if (!$infofound) {
+                            echo '<p>No information recorded.</p>';
+                        }?>
+                    </dl>
+                </div> <!--location-info -->
+
+                <div id="info-box">
+                    <h3>Associated Performers</h3>
+                    <dl class="dl-horizontal">
+                        <?php
+                        $infofound = false;
+                        foreach($associationdisplay as $key) {
+
+                            $element = $this->skylight_utilities->getField($key);
+
+                            if(isset($solr[$element])) {
+
+                                echo '<dt>' . $key . '</dt>';
+
+                                echo '<dd>';
+                                foreach($solr[$element] as $index => $metadatavalue) {
+                                    // if it's a facet search
+                                    // make it a clickable search link
+                                    if(in_array($key, $filters)) {
+
+                                        $orig_filter = urlencode($metadatavalue);
+                                        $lower_orig_filter = strtolower($metadatavalue);
+                                        $lower_orig_filter = urlencode($lower_orig_filter);
+
+                                        echo '<a href="./search/*:*/' . $key . ':%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$metadatavalue.'</a>';
+                                    }
+                                    else {
+                                        echo $metadatavalue;
+                                    }
+                                    if($index < sizeof($solr[$element]) - 1) {
+
+                                        echo '; ';
+                                    }
+                                }
+                                $infofound = true;
+                                echo '</dd>';
+                            }
+                        }
+                        if (!$infofound) {
+                            echo '<p>No information recorded.</p>';
+                        }?>
+                    </dl>
+                </div> <!--association-info -->
+
+                <div id="info-box">
+                    <h3>Measurements</h3>
+                    <dl class="dl-horizontal">
+                        <?php
+                        $infofound = false;
+                        foreach($measurementdisplay as $key) {
+
+                            $element = $this->skylight_utilities->getField($key);
+
+                            if(isset($solr[$element])) {
+
+                                echo '<dt>' . $key . '</dt>';
+
+                                echo '<dd>';
+                                foreach($solr[$element] as $index => $metadatavalue) {
+                                    // if it's a facet search
+                                    // make it a clickable search link
+                                    if(in_array($key, $filters)) {
+
+                                        $orig_filter = urlencode($metadatavalue);
+                                        $lower_orig_filter = strtolower($metadatavalue);
+                                        $lower_orig_filter = urlencode($lower_orig_filter);
+
+                                        echo '<a href="./search/*:*/' . $key . ':%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$metadatavalue.'</a>';
+                                    }
+                                    else {
+                                        echo $metadatavalue;
+                                    }
+                                    if($index < sizeof($solr[$element]) - 1) {
+
+                                        echo '; ';
+                                    }
+                                }
+                                $infofound = true;
+                                echo '</dd>';
+                            }
+                        }
+                        if (!$infofound) {
+                            echo '<p>No information recorded.</p>';
+                        }?>
+                    </dl>
+                </div> <!--measurement-info -->
+
+                <div id="info-box">
+                    <h3>Description</h3>
+                    <dl class="dl-horizontal">
+                        <?php
+                        $infofound = false;
+                        foreach($descriptiondatadisplay as $key) {
+
+                            $element = $this->skylight_utilities->getField($key);
+
+                            if(isset($solr[$element])) {
+
+                                echo '<dt>' . $key . '</dt>';
+
+                                echo '<dd>';
+                                foreach($solr[$element] as $index => $metadatavalue) {
+                                    // if it's a facet search
+                                    // make it a clickable search link
+                                    if(in_array($key, $filters)) {
+
+                                        $orig_filter = urlencode($metadatavalue);
+                                        $lower_orig_filter = strtolower($metadatavalue);
+                                        $lower_orig_filter = urlencode($lower_orig_filter);
+
+                                        echo '<a href="./search/*:*/' . $key . ':%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$metadatavalue.'</a>';
+                                    }
+                                    else {
+                                        echo $metadatavalue;
+                                    }
+                                    if($index < sizeof($solr[$element]) - 1) {
+
+                                        echo '; ';
+                                    }
+                                }
+                                $infofound = true;
+                                echo '</dd>';
+                            }
+                        }
+                        if (!$infofound) {
+                            echo '<p>No information recorded.</p>';
+                        }?>
+                    </dl>
+                </div> <!--description info -->
+
+
+            </div> <!-- metadata -->
+        </div> <!-- panel body -->
+    </div>
+</div>

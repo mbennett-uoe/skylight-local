@@ -4,12 +4,48 @@
         <h1>Past Exhibitions:</h1>
         <div class="past-list">
             <div>
-                <h2><a href="./visualdissection" alt="Visual Dissection" title="Brown Paper and Imagination Information Page">Brown Paper and Imagination: Revealing the Revel</a></h2>
+                <h2><a href="./godfreythomson" alt="Godfrey H Thomson" title="Godfrey H Thomson Information Page">Godfrey H Thomson: The man who tested Scotland's IQ</a></h2>
+                <p>29th July 2016 - 20th October 2016</p>
+                <a href="./godfreythomson" alt="Godfrey H Thomson" title="Godfrey H Thomson">
+                    <div id="exhib-tile-11"></div>
+                </a>
+                <h3><a href='./search/*:*/Exhibition:"godfrey+thomson%3A+the+man+who+tested+scotland%27s+iq|||Godfrey+Thomson%3A+The+Man+Who+Tested+Scotland%27s+IQ"'><i class="fa fa-search">&nbsp;</i>View all items</a></h3>
+
+                <p>
+                    Professor Sir Godfrey Hilton Thomson (1881–1955) was a giant in educational research. In 1932, and again in
+                    1947, he led ground-breaking studies to test the intelligence of every 11-year-old in Scotland.
+                </p>
+                <p>
+                    In his day, he was internationally recognised as an educator, an intelligence theorist, a statistician,
+                    and the largest-scale producer of IQ tests in Europe.
+                </p>
+                <p>
+                    Thomson simultaneously held the Chair of Education at the University of Edinburgh and the post of Director
+                    of Studies at the Edinburgh Provincial Training Centre at Moray House from 1925 until 1951.
+                </p>
+                <p>
+                    Throughout his career he worked to ensure that disadvantaged children had the opportunity for a good
+                    education. His academic and professional concerns, such as educational testing and social mobility,
+                    remain relevant today.
+                </p>
+                <p>
+                    Despite Thomson’s achievements during his lifetime, after his death he began to fade from public and
+                    academic memory. In 2008, a chance phone call facilitated the rescue of his personal and professional papers
+                    from his family home, just prior to its demolition.
+                </p>
+                <p>
+                    Today, the Godfrey Thomson Archive provides key insights into the life and work of this remarkable man.
+                    This exhibition tells his story.
+                </p>
+            </div>
+
+            <div>
+                <h2><a href="./revel" alt="Visual Dissection" title="Brown Paper and Imagination Information Page">Brown Paper and Imagination: Revealing the Revel</a></h2>
                 <p>31st July 2015 - 31st October 2015</p>
-                <a href="./visualdissection" alt="Visual Dissection" title="Brown Paper and Imagination">
+                <a href="./revel" alt="Visual Dissection" title="Brown Paper and Imagination">
                     <div id="exhib-tile-10"></div>
                 </a>
-                <h3><a href='./search/*:*/Exhibition:"visual+dissection|||Visual+Dissection"'><i class="fa fa-search">&nbsp;</i>View all items</a></h3>
+                <h3><i class="fa fa-search">&nbsp;</i> Coming Soon</h3>
                 <p>
                     Edinburgh College of Art’s yearly Revel, which dates back to 1909, brings together staff and
                     students for a themed party with costumes, scenery, performances and dancing.

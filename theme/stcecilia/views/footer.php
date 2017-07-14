@@ -1,9 +1,10 @@
-        <div class="footer-margin"></div>
-</div> <!--END of ROW -- move into col sidebar -->
-</div><!--END of container -- move into col sidebar -->
-        <footer class="footer footer-piccolo bg-primary">
+        <footer class="footer bg-primary">
                 <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-md-3 hidden-sm hidden-xs">
+                    </div>
+
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+
                         <div class="centered text-center">
                         <ul class="nav nav-pills">
                             <li><a href="./" title="<?php echo $site_title; ?> Home"><i class="fa fa-home fa-lg">&nbsp;</i></a></li>
@@ -13,6 +14,9 @@
                             <li><a href="./feedback" title="Provide feedback"><i class="fa fa-envelope fa-lg">&nbsp;</i></a></li>
                         </ul>
                         </div>
+                    </div>
+                    <div class="col-md-3 hidden-sm hidden-xs">
+                        <a class="navbar-brand navbar-left" href="http://www.ed.ac.uk" title="The University of Edinburgh Homepage Link" target="_blank"><img src="<?php echo base_url(); ?>theme/stcecilia/images/UoETransparentWhite.png" class="img-responsive uoe_logo" alt="University of Edinburgh link" /></a>
                     </div>
                 </div>
                 <div class="row">
@@ -80,6 +84,7 @@
         <script type="text/javascript" src="<?php echo base_url()?>assets/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
         <script src="<?php echo base_url()?>assets/plugins/plugins.js"></script>
         <script src="<?php echo base_url()?>assets/script/script.js"></script>
+        <script src="<?php echo base_url()?>theme/stcecilia/js/script.js"></script>
 
     </body>
 </html>

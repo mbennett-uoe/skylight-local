@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="http://releases.flowplayer.org/6.0.4/skin/minimalist.css">
     <link rel="stylesheet" href="<?php echo base_url()?>assets/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>theme/<?php echo $this->config->item('skylight_theme'); ?>/css/style.css?v=2">
+    <link href="https://fonts.googleapis.com/css?family=Hind" rel="stylesheet">
 
     <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
     <script src="<?php echo base_url()?>assets/modernizr/modernizr-1.7.min.js"></script>
@@ -46,15 +47,23 @@
     <script src="<?php echo base_url()?>assets/jquery-1.11.0/jcarousel/jquery.jcarousel.min.js"></script>
     <script src="<?php echo base_url()?>assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="<?php echo base_url()?>assets/masonry/masonry.pkgd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
-    <script src="https://cdn.rawgit.com/mejackreed/Leaflet-IIIF/master/leaflet-iiif.js"></script>
+    <script src="<?php echo base_url()?>assets/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="<?php echo base_url()?>assets/isotope/isotope.pkgd.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>-->
+    <!---<script src="https://cdn.rawgit.com/mejackreed/Leaflet-IIIF/master/leaflet-iiif.js"></script>-->
     <script src="<?php echo base_url()?>assets/openseadragon/openseadragon.min.js"></script>
-		<script>
+    <!-- Enable media queries for old IE -->
+    <!--[if lt IE 9]>
+    <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+    <![endif]-->
+    <script>
 		$(".toggle_container").hide();
     
     $("p.trigger").click(function(){
         $(this).toggleClass("active").next().slideToggle("normal");
-    });</script>
+    });
+    </script>
+
     <?php if ($ga_code != '') {?>
         <script src="http://www.google-analytics.com/analytics.js"></script>
 
@@ -103,25 +112,51 @@
     } ?>
 </head>
 
-<body>
+<body class="record">
+    <nav class="navbar navbar-default navbar-fixed-top">
 
-    <nav class="navbar navbar-default">
-        <div class="col-xs-12">
-            <div class="navbar-header">
-                <a class="navbar-brand navbar-left" href="http://www.ed.ac.uk" title="The University of Edinburgh Homepage Link" target="_blank"><img src="<?php echo base_url(); ?>theme/stcecilia/images/logo.png" class="img-responsive uoe_logo" alt="University of Edinburgh link" /></a>
-                <a class="navbar-brand navbar-left" href="http://www.ed.ac.uk" title="The St Cecilia's Hall Homepage Link" target="_blank">St Cecilia's Hall home page link</a>
-            </div>
-            <div class="collapse navbar-collapse">
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                    <form class="navbar-form navbar-right" role="search" action="./redirect/" method="post">
-                        <div class="form-group">
-                            <input id="uoe-search" type="text" class="form-control" placeholder="Search the collections" name="q" value="<?php if (isset($searchbox_query)) echo urldecode($searchbox_query); ?>" id="q" />
-                        </div>
-                        <button class="btn" type="submit">
+        <div class="col-lg-8 col-md-8 col-sm-9 hidden-xs">
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <a href="./" class="home-icon"><i class="fa fa-home fa-lg"></i></a>
+            <form class="navbar-form navbar-left" role="search" action="./redirect/" method="post">
+                <div class="input-group search-box">
+                    <input id="uoe-search" type="text" class="form-control" placeholder="Search the museum collections" name="q" value="<?php if (isset($searchbox_query)) echo urldecode($searchbox_query); ?>" id="q" />
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default" name="submit_search" value="Search" id="submit_search">
+                            <i class="glyphicon glyphicon-search"></i>&nbsp;Search
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+        <div class="hidden-lg hidden-md hidden-sm col-xs-7">
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <a href="./" class="home-icon"><i class="fa fa-home fa-lg"></i></a>
+            <form class="navbar-form navbar-left" role="search" action="./redirect/" method="post">
+                <div class="input-group search-box">
+                    <input id="uoe-search-sm" type="text" class="form-control" placeholder="Search" name="q" value="<?php if (isset($searchbox_query)) echo urldecode($searchbox_query); ?>" id="q" />
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default" name="submit_search" value="Search" id="submit_search">
                             <i class="glyphicon glyphicon-search"></i>
                         </button>
-                    </form>
-           </div>
+                    </span>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-4 col-md-4 hidden-sm hidden-xs">
+            <div class="navbar-right sch-link">
+                <a href="http://stcecilias.ed.ac.uk" title="Visit St Cecilia's Hall" target="_blank">Visit St Cecilia's Hall</a>
+            </div>
+        </div>
+        <div class="hidden-lg hidden-md col-sm-3 hidden-xs">
+            <div class="navbar-right sch-link sch-link-sm">
+                <a href="http://stcecilias.ed.ac.uk" title="Visit St Cecilia's Hall" target="_blank">St Cecilia's Hall</a>
+            </div>
+        </div>
+        <div class="hidden-lg hidden-md hidden-sm col-xs-5">
+            <div class="navbar-right sch-link sch-link-xs">
+                <a href="http://stcecilias.ed.ac.uk" title="Visit St Cecilia's Hall" target="_blank">St Cecilia's Hall</a>
+            </div>
         </div>
     </nav><!-- end of header container -->
 

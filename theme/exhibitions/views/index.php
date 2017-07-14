@@ -1,9 +1,10 @@
 <div class="record">
     <div class="content byEditor">
-        <h1>CURRENT EXHIBITION: <a href="./godfreythomson" alt="Godfrey H Thomson"
-                                   title="Godfrey H Thomson">Godfrey H Thomson: The man who tested Scotland's IQ</a>
+        <h1>CURRENT EXHIBITION: <a href="./soundbody" alt="Sound Body Sound Mind"
+                                   title="Sound Body Sound Mind">Sound Body, Sound Mind: A History of Healing Through the University’s Collections
+            </a>
         <h3>University of Edinburgh, Main Library, George Square<br/>
-            29th July - 20th October 2016, Monday - Saturday, 10:00 - 17:00</h3>
+            6th April - 1st July 2017, Monday - Saturday, 10:00 - 17:00</h3>
             <div id="current-banner"></div>
             <div class="clearfix"></div>
         <div id="past-exhib-block">
@@ -13,9 +14,17 @@
 
                     <ul class="ex-list">
                         <li class="past-ex">
-                            <h3><a href="./revel" alt="Visual Dissection" title="Visual Dissection Information Page">Brown Paper and Imagination</a></h3>
+                            <h3><a href="./godfreythomson" alt="Godfrey H Thomson" title="Godfrey H Thomson">Godfrey H Thomson</a></h3><br />
+                            <h3><a href='./search/*:*/Exhibition:"godfrey+thomson%3A+the+man+who+tested+scotland%27s+iq|||Godfrey+Thomson%3A+The+Man+Who+Tested+Scotland%27s+IQ"'><i class="fa fa-search">&nbsp;</i>View Items</a></h3>
+                            <p>29th Jul - 26th Nov 2016</p>
+                            <a href="./godfreythomson" alt="Godfrey H Thomson" title="Godfrey H Thomson">
+                                <div id="exhib-tile-11"></div>
+                            </a>
+                        </li>
+                        <li class="past-ex">
+                            <h3><a href="./revel" alt="Brown Paper and Imagination" title="Brown Paper and Imagination">Brown Paper and Imagination</a></h3>
                             <h3><i class="fa fa-search">&nbsp;</i> Coming Soon</h3>
-                            <p>1 Apr 2016 - 2 Jul 2016</p>
+                            <p>1 Apr - 2 Jul 2016</p>
                             <a href="./revel" alt="Brown Paper and Imagination" title="Brown Paper and Imaginationn">
                                 <div id="exhib-tile-10"></div>
                             </a>

@@ -1,6 +1,6 @@
 <?php
-
 $author_field = $this->skylight_utilities->getField("Author");
+$acc_no_field = $this->skylight_utilities->getField("Accession Number");
 $type_field = $this->skylight_utilities->getField("Type");
 $bitstream_field = $this->skylight_utilities->getField("Bitstream");
 $thumbnail_field = $this->skylight_utilities->getField("Thumbnail");
@@ -9,92 +9,36 @@ $filters = array_keys($this->config->item("skylight_filters"));
 $link_uri_field = $this->skylight_utilities->getField("Link");
 $tags_field = $this->skylight_utilities->getField("Tags");
 $media_uri = $this->config->item("skylight_media_url_prefix");
-
+$image_uri_field = $this->skylight_utilities->getField('ImageUri');
+$permalink_field = $this->skylight_utilities->getField('Permalink');
 $type = 'Unknown';
 $mainImage = false;
 $mainImageTest = false;
 $numThumbnails = 0;
 $bitstreamLinks = array();
 $image_id = "";
-
+$accno = '';
 if(isset($solr[$type_field])) {
     $type = "media-" . strtolower(str_replace(' ','-',$solr[$type_field][0]));
 }
 
-
-// we need to display a thumbnail
-
-
-/*
-
-
-        if ((strpos($b_uri, ".jpg") > 0) or (strpos($b_uri, ".JPG") > 0))
-        {
-            if (!$mainImage) {
-
-                // we have a main image
-                $mainImageTest = true;
-
-                $bitstreamLink = '<div class="main-image">';
-                /*OLD CODE
-                                $bitstreamLink .= '<a title = "' . $record_title . '" class="fancybox" rel="group" href="' . $b_uri . '"> ';
-                                $bitstreamLink .= '<img class="record-main-image" src = "'. $b_uri .'">';
-                                $bitstreamLink .= '</a>';
-
-                                $bitstreamLink .= '</div>';
-                        */
-
-
-                // if there are thumbnails
-/*
-                if(isset($solr[$thumbnail_field])) {
-                    foreach ($solr[$thumbnail_field] as $thumbnail) {
-
-                        $t_segments = explode("##", $thumbnail);
-                        $t_filename = $t_segments[1];
-
-                        if ($t_filename === $b_filename . ".jpg") {
-
-                            $t_handle = $t_segments[3];
-                            $t_seq = $t_segments[4];
-                            $t_uri = './record/'.$b_handle_id.'/'.$t_seq.'/'.$t_filename;
-
-                            $thumbnailLink[$numThumbnails] = '<div class="thumbnail-tile';
-
-                            if($numThumbnails % 4 === 0) {
-                                $thumbnailLink[$numThumbnails] .= ' first';
-                            }
-
-                            $thumbnailLink[$numThumbnails] .= '"><a title = "' . $record_title . '" class="fancybox" rel="group" href="' . $b_uri . '"> ';
-                            $thumbnailLink[$numThumbnails] .= '<img src = "'.$t_uri.'" class="record-thumbnail" title="'. $record_title .'" /></a></div>';
-
-                            $numThumbnails++;
-                        }
-                    }
-                }
-
-            }
-
-        }*/
+//we are IIIF, so the only bitstreams we're interested in are video and audio (if art ever generate any!)
 if(isset($solr[$bitstream_field]) && $link_bitstream)
 {
-
     foreach ($solr[$bitstream_field] as $bitstream_for_array)
     {
         $b_segments = explode("##", $bitstream_for_array);
         $b_seq = $b_segments[4];
         $bitstream_array[$b_seq] = $bitstream_for_array;
     }
-
     ksort($bitstream_array);
-
     $mainImage = false;
     $videoFile = false;
     $audioFile = false;
     $audioLink = "";
     $videoLink = "";
+    $jsonLink = "";
     $b_seq =  "";
-
     foreach($bitstream_array as $bitstream)
     {
         $mp4ok = false;
@@ -128,7 +72,6 @@ if(isset($solr[$bitstream_field]) && $link_bitstream)
             {
                 $mp4ok = true;
             }
-
             if ($mp4ok == true)
             {
                 $videoLink .= '<div class="flowplayer" data-analytics="' . $ga_code . '" title="' . $record_title . ": " . $b_filename . '">';
@@ -139,7 +82,6 @@ if(isset($solr[$bitstream_field]) && $link_bitstream)
                 $videoFile = true;
             }
         }
-
         else if ((strpos($b_filename, ".webm") > 0) or (strpos($b_filename, ".WEBM") > 0))
         {
             //Microsoft Edge needs to be dealt with. Chrome calls itself Safari too, but that doesn't matter.
@@ -158,25 +100,32 @@ if(isset($solr[$bitstream_field]) && $link_bitstream)
                 }
             }
         }
-
         else if ((strpos($b_uri, ".pdf") > 0) or (strpos($b_uri, ".PDF") > 0))
         {
-
             $bitstreamLink = $this->skylight_utilities->getBitstreamLink($bitstream);
             $bitstreamUri = $this->skylight_utilities->getBitstreamUri($bitstream);
             $pdfLink .= 'Click ' . $bitstreamLink . 'to download. (<span class="bitstream_size">' . getBitstreamSize($bitstream) . '</span>)';
         }
+        else if ((strpos($b_uri, ".json") > 0) or (strpos($b_uri, ".JSON") > 0))
+        {
+            echo base_url();
+            $bitstreamLink = $this->skylight_utilities->getBitstreamLink($bitstream);
+            $bitstreamUri = $this->skylight_utilities->getBitstreamUri($bitstream);
+            $jsonLink .= '<a target="_blank" href="http://test.collections.ed.ac.uk/art/'.$b_handle_id.'/'.$b_seq.'/'.$b_filename.'"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/International_Image_Interoperability_Framework_logo.png" class="iiiflogo" title="IIIF manifest"></a>
+            <a target="_blank" href="'.$bitstreamUri.'"><img src="http://images.is.ed.ac.uk/luna/images/LUNAIIIF80.png" class="lunaiiif" title="IIIF manifest"></a>';
+            $jsonLink .='<a target="_blank" href ="https://universalviewer.io/?manifest='.$bitstreamUri.'"><img src="http://digital.nls.uk/da/assets/graphics/misc/logo-uv-24-32.png" class="iiiflogo" title="View in UV"></a>';
+            $jsonLink .='<a target="_blank" href="'.$bitstreamUri.'"><img src="http://digital.nls.uk/da/assets/graphics/misc/logo-mirador-24-32.png" class="iiiflogo" title="View in Mirador"></a>';
+            $jsonLink .='<a href ="./iiif">What is this?</a>';
 
+        }
         ?>
-    <?php
+        <?php
     }
 }
 ?>
 
 <div class="content">
-    <?php //if($mainImageTest === true) { ?>
     <div class="full-title">
-        <?php //} ?>
         <h1 class="itemtitle"><?php echo $record_title ?>
             <?php if(isset($solr[$date_field])) {
                 echo " (" . $solr[$date_field][0] . ")";
@@ -184,235 +133,245 @@ if(isset($solr[$bitstream_field]) && $link_bitstream)
         </h1>
         <div class="tags">
             <?php
-
             if (isset($solr[$author_field])) {
                 foreach($solr[$author_field] as $author) {
-
                     $orig_filter = urlencode($author);
-
                     $lower_orig_filter = strtolower($author);
                     $lower_orig_filter = urlencode($lower_orig_filter);
-
                     echo '<a class="artist" href="./search/*:*/Artist:%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$author.'</a>';
                 }
             }
-
             ?>
         </div>
-        <?php //if($mainImageTest === true) { ?>
     </div>
-<?php //if($mainImage) { ?>
 
-        <?php //echo $bitstreamLink;
-        //if (isset($solr[$link_uri_field])) {
-        $numThumbnails = 0;
-        foreach ($solr[$link_uri_field] as $linkURI)
-        {
-            if (strpos($linkURI, 'luna') > 0)
-            {
-                //just for test, this line!
-                $tileSource = str_replace('images.is.ed.ac.uk', 'lac-luna-test2.is.ed.ac.uk:8181', $linkURI);
-                $tileSource = str_replace('detail', 'iiif', $tileSource) . '/info.json';
-                $iiifmax = str_replace('info.json', 'full/full/0/default.jpg', $tileSource);
+    <?php
+    $numThumbnails = 0;
+    $imageCounter = 0;
+    if (isset($solr[$image_uri_field])) {
+        foreach ($solr[$image_uri_field] as $imageUri) {
+            if (strpos($imageUri, 'luna') > 0) {
+                $tileSource = str_replace('full/full/0/default.jpg', 'info.json', $imageUri);
+                $iiifmax = $imageUri;
+                //check portrait or landscape to generate tile size
                 list($width, $height) = getimagesize($iiifmax);
-                //echo 'WIDTH'.$width.'HEIGHT'.$height
                 $portrait = true;
-                if ($width > $height)
-                {
+                if ($width > $height) {
                     $portrait = false;
                 }
-                $json =  file_get_contents($tileSource);
+                $json = file_get_contents($tileSource);
                 $jobj = json_decode($json, true);
-
                 $error = json_last_error();
-
-                $jsoncontext = $jobj['@context'];
-                $jsonid = $jobj['@id'];
-                $jsonheight = $jobj['height'];
-                $jsonwidth = $jobj['width'];
-                $jsonprotocol = $jobj['protocol'];
-                $jsontiles = $jobj['tiles'];
-                $jsonprofile = $jobj['profile'];
-
-                if (!$mainImage)
-                {
-
-                    $mainImageTest = true;
-                ?>
-                    <div class="full-image">
-                        <div id="openseadragon1" style="width: 660px; height:660px;">
-                            <script type="text/javascript">
-                                OpenSeadragon({
-                                    id: "openseadragon1",
-                                    prefixUrl: "<?php echo base_url();?>assets/openseadragon/images/",
-                                    tileSources: [{
-                                        "@context": "<?php echo $jsoncontext ?>",
-                                        "@id": "<?php echo $jsonid ?>",
-                                        "height": <?php echo $jsonheight ?>,
-                                        "width": <?php echo $jsonwidth ?>,
-                                        "profile":  [ "http://iiif.io/api/image/2/level2.json" ,
-                                            {
-                                                "formats" : [ "gif", "pdf"]
-                                            }
-                                        ],
-                                        "protocol": "<?php echo $jsonprotocol ?>",
-                                        "tiles": [{
-                                            "scaleFactors": [ 1, 2, 8, 16, 32 ],
-                                            "width": 512
-                                        }],
-                                        tileSize: 500,
-                                        //minLevel: 2,
-                                        preserveViewport: true,
-                                        visibilityRatio: 1,
-                                        minZoomLevel: 1,
-                                        defaultZoomLevel: 1,
-                                        sequenceMode: true
-                                    }]
-                                });
-                            </script>
-                        </div>
-                    </div>
-                <?php
-                    $mainImage = true;
-                    if ($portrait)
-                    {
-                        $iiifurlsmall = str_replace('info.json', 'full/,250/0/default.jpg', $tileSource);
-                    }
-                    else
-                    {
-                        $iiifurlsmall = str_replace('info.json', 'full/250,/0/default.jpg', $tileSource);
-                    }
-                    $iiifurlfull = str_replace('info.json', 'full/!660,660/0/default.jpg', $tileSource);
-
-                    $thumbnailLink[$numThumbnails] = '<div class="thumbnail-tile';
-
-                    if ($numThumbnails % 4 === 0)
-                    {
-                        $thumbnailLink[$numThumbnails] .= ' first';
-                    }
-
-                    $thumbnailLink[$numThumbnails] .= '"><a title = "' . $record_title . '" class="fancybox" rel="group" href="' . $iiifurlfull . '"> ';
-                    $thumbnailLink[$numThumbnails] .= '<img src = "' . $iiifurlsmall . '" class="record-thumbnail" title="' . $record_title . '" /></a></div>';
+                $jsoncontext[$imageCounter] = $jobj['@context'];
+                $jsonid[$imageCounter] = $jobj['@id'];
+                $jsonheight[$imageCounter] = $jobj['height'];
+                $jsonwidth[$imageCounter] = $jobj['width'];
+                $jsonprotocol[$imageCounter] = $jobj['protocol'];
+                $jsontiles[$imageCounter] = $jobj['tiles'];
+                $jsonprofile[$imageCounter] = $jobj['profile'];
+                $portrait = true;
+                if ($width > $height) {
+                    $jsontilesize[$imageCounter] = $jsontiles[$imageCounter][0]['width'];
+                    $portrait = false;
+                } else {
+                    $jsontilesize[$imageCounter] = $jsontiles[$imageCounter][0]['height'];
                 }
-                else
-                {
-                    if ($portrait)
-                    {
-                        $iiifurlsmall = str_replace('info.json', 'full/,250/0/default.jpg', $tileSource);
-                    }
-                    else
-                    {
-                        $iiifurlsmall = str_replace('info.json', 'full/250,/0/default.jpg', $tileSource);
-                    }
 
-                    $iiifurlfull = str_replace('info.json', 'full/!660,660/0/default.jpg', $tileSource);
-
-                    $thumbnailLink[$numThumbnails] = '<div class="thumbnail-tile';
-
-                    if ($numThumbnails % 4 === 0)
-                    {
-                        $thumbnailLink[$numThumbnails] .= ' first';
-                    }
-
-                    $thumbnailLink[$numThumbnails] .= '"><a title = "' . $record_title . '" class="fancybox" rel="group" href="' . $iiifurlfull . '"> ';
-                    $thumbnailLink[$numThumbnails] .= '<img src = "' . $iiifurlsmall . '" class="record-thumbnail" title="' . $record_title . '" /></a></div>';
-
-
-                }
-                $numThumbnails++;
+                $imageCounter++;
             }
-        //}
-        } ?>
+        }
+        echo "<div id='imageCounter' style='display:none;'>$imageCounter</div>";
 
-<?php// } ?>
-<?php //} ?>
+        $divCounter = 0;
+        $freshIn = true;
+        while ($divCounter < $imageCounter) {
 
-    <?php //if($mainImageTest === true) { ?>
+            if (!$mainImage) {
+                $mainImageTest = true;
+                ?>
+                <div class="full-image">
+                    <div id="openseadragon<?php echo $divCounter; ?>" class="image-toggle"<?php if (!$freshIn) {
+                        echo ' style="display:none;"';
+                    } else {
+                        echo ' style="display:block;"';
+                    } ?>>
+                        <script type="text/javascript">
+                            OpenSeadragon({
+                                id: "openseadragon<?php echo $divCounter; ?>",
+                                prefixUrl: "<?php echo base_url();?>assets/openseadragon/images/",
+                                tileSources: [{
+                                    "@context": "<?php echo $jsoncontext[$divCounter] ?>",
+                                    "@id": "<?php echo $jsonid[$divCounter] ?>",
+                                    "height": <?php echo $jsonheight[$divCounter] ?>,
+                                    "width": <?php echo $jsonwidth[$divCounter] ?>,
+                                    "profile": ["http://iiif.io/api/image/2/level2.json",
+                                        {
+                                            "formats": ["gif", "pdf"]
+                                        }
+                                    ],
+                                    "protocol": "<?php echo $jsonprotocol[$divCounter] ?>",
+                                    "tiles": [{
+                                        "scaleFactors": [1, 2, 8, 16, 32],
+                                        "width": 512
+                                    }],
+                                    "tileSize":<?php echo $jsontilesize[$divCounter];?>,
+                                    preserveViewport: true,
+                                    visibilityRatio: 1,
+                                    minZoomLevel: 1,
+                                    defaultZoomLevel: 1,
+                                    sequenceMode: true
+                                }]
+                            });
+                        </script>
+                    </div>
+                </div>
+
+                <?php
+            }
+            $divCounter++;
+            $freshIn = false;
+        }
+        if(isset($solr[$acc_no_field])) {
+           $accno =  $solr[$acc_no_field][0];
+        }
+
+        $manifestURI = "https://test.librarylabs.ed.ac.uk/files/".$accno.".json";
+        $numThumbnails = 0;
+        $imageset = false;
+        $thumbnailLink = array();
+        $countThumbnails = count($solr[$image_uri_field]);
+        echo '<div class="thumb-strip">';
+        if ($countThumbnails > 1) {
+            foreach ($solr[$image_uri_field] as $imageURI) {
+                $imageURI = $solr[$image_uri_field][$numThumbnails];
+
+                $thumbnailLink[$numThumbnails] = '<label class="image-toggler" data-image-id="#openseadragon' . $numThumbnails . '">';
+                $thumbnailLink[$numThumbnails] .= '<input type="radio" name="options" id="option' . $numThumbnails . '">';
+
+                $iiifsmall = str_replace('/full/0/', '/!250,250/0/', $imageURI);
+
+                $thumbnailLink[$numThumbnails] .= '<img src = "' . $iiifsmall . '" class="record-thumb-strip" title="' . $solr[$title_field][0] . '" /></label>';
+
+                echo $thumbnailLink[$numThumbnails];
+                $numThumbnails++;
+                $imageset = true;
+            }
+        }
+     ?>
+
+    <div>
+        <p>
+            <?php echo $jsonLink; ?>
+        </p>
+    </div>
+    <?php } ?>
 
     <div class="full-metadata">
-        <?php// } ?>
+
         <table>
             <tbody>
             <?php $excludes = array(""); ?>
             <?php
+            $viafvalue = '';
+            $isnivalue = '';
+            $lcvalue = '';
+            $isni = '';
+            $viaf = '';
+            $lc = '';
 
+            $artistcount = 0;
+            foreach($recorddisplay as $key)
+            {
+                //Find out how many artists we have for authority permalink generation
+                if ($key == 'Artist')
+                {
+                    $artistcount++;
+                }
+            }
             foreach($recorddisplay as $key) {
-
                 $element = $this->skylight_utilities->getField($key);
 
                 if(isset($solr[$element])) {
                     if(!in_array($key, $excludes)) {
-                        echo '<tr><th>'.$key.'</th><td>';
-                        foreach($solr[$element] as $index => $metadatavalue) {
-                            // if it's a facet search
-                            // make it a clickable search link
-                            if(in_array($key, $filters) && $key != "Artist") {
-
-                                $orig_filter = urlencode($metadatavalue);
-                                $lower_orig_filter = strtolower($metadatavalue);
-                                $lower_orig_filter = urlencode($lower_orig_filter);
-
-                                echo '<a href="./search/*:*/' . $key . ':%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22">'.$metadatavalue.'</a>';
-                            }
-                            else {
-                                echo $metadatavalue;
-                            }
-
-                            if($index < sizeof($solr[$element]) - 1) {
-                                echo '; ';
+                        //Generate Permalinks for artist name
+                        if ($key == "Permalink")
+                        {
+                            //Do not attempt to attribute authority link if we have > 1 artist, as there is no direct relationship in the metadata
+                            if ($artistcount == 1) {
+                                foreach ($solr[$element] as $index => $metadatavalue) {
+                                    if (strpos($metadatavalue, "viaf") > 0) {
+                                        $viafvalue = $metadatavalue;
+                                    } else if (strpos($metadatavalue, "isni") > 0) {
+                                        $isnivalue = $metadatavalue;
+                                    } else if (strpos($metadatavalue, "gov") > 0) {
+                                        $lcvalue = $metadatavalue;
+                                    }
+                                }
                             }
                         }
-                        echo '</td></tr>';
+                        else
+                        {
+                            echo '<tr><th>' . $key . '</th><td>';
+                            foreach ($solr[$element] as $index => $metadatavalue) {
+                                // if it's a facet search
+                                // make it a clickable search link
+                                if (in_array($key, $filters) && $key != "Artist") {
+                                    $orig_filter = urlencode($metadatavalue);
+                                    $lower_orig_filter = strtolower($metadatavalue);
+                                    $lower_orig_filter = urlencode($lower_orig_filter);
+                                    echo '<a href="./search/*:*/' . $key . ':%22' . $lower_orig_filter . '%7C%7C%7C' . $orig_filter . '%22">' . $metadatavalue . '</a>';
+                                } else {
+                                    if ($key == "Artist")
+                                    {
+                                        //for artist, add superscript authority links if available
+                                        if ($viafvalue !== '')
+                                        {
+                                            $viaf = '<a href = "'.$viafvalue.'" target = "_blank"><sup>VIAF</sup></a>';
+                                        }
+                                        if ($isnivalue !== '')
+                                        {
+                                            $isni = '<a href = "'.$isnivalue.'" target = "_blank"><sup>ISNI</sup></a>';
+                                        }
+                                        if ($lcvalue !== '')
+                                        {
+                                            $lc = '<a href = "'.$lcvalue.'" target = "_blank"><sup>LC</sup></a>';
+                                        }
+
+                                        echo $metadatavalue.' '.$viaf.' '.$isni.' '.$lc;
+                                    }
+                                    else {
+                                        echo $metadatavalue;
+                                    }
+                                }
+                                if ($index < sizeof($solr[$element]) - 1) {
+                                    echo '; ';
+                                }
+                            }
+                            echo '</td></tr>';
+                        }
+
                     }
                 }
-
             } ?>
 
             <?php
             $i = 0;
-            $lunalink = false;
-            /*if (isset($solr[$link_uri_field])) {
-                foreach($solr[$link_uri_field] as $linkURI) {
-                    $linkURI = str_replace('"', '%22', $linkURI);
-                    $linkURI = str_replace('|', '%7C', $linkURI);
-
-                    if (strpos($linkURI,"images.is.ed.ac.uk") != false)
-                    {
-                        $lunalink = true;
-
-                        if($i == 0) {
-                            echo '<tr><th>Zoomable Image(s)</th><td>';
-                        }
-
-                        echo '<a href="'. $linkURI . '" target="_blank"><i class="fa fa-file-image-o fa-lg">&nbsp;</i></a>';
-
-                        $i++;
-                    }
-
-                }
-
-                if($lunalink) {
-                    echo '</td></tr>';
-                }
-            }*/?>
+            $lunalink = false; ?>
             </tbody>
         </table>
-        <?php //if($mainImageTest === true) { ?>
     </div>
-<?php// } ?>
+
     <div class="clearfix"></div>
     <!-- print out crowdsourced tags -->
     <?php
-
     if(isset($solr[$tags_field])) {?>
         <div class="crowd-tags"><span class="crowd-title" title="User generated tags created through crowd sourcing games"><i class="fa fa-users fa-lg" >&nbsp;</i>Tags:</span>
-         <?php foreach($solr[$tags_field] as $tag) {
-
-             $orig_filter = urlencode($tag);
-             $lower_orig_filter = strtolower($tag);
-             $lower_orig_filter = urlencode($lower_orig_filter);
-            echo '<span class="crowd-tag">' . '<a href="./search/*:*/Tags:%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22"><i class="fa fa-tags fa-lg">&nbsp;</i>'.$tag.'</a>' . '</span>';
-         } ?>
+            <?php foreach($solr[$tags_field] as $tag) {
+                $orig_filter = urlencode($tag);
+                $lower_orig_filter = strtolower($tag);
+                $lower_orig_filter = urlencode($lower_orig_filter);
+                echo '<span class="crowd-tag">' . '<a href="./search/*:*/Tags:%22'.$lower_orig_filter.'%7C%7C%7C'.$orig_filter.'%22"><i class="fa fa-tags fa-lg">&nbsp;</i>'.$tag.'</a>' . '</span>';
+            } ?>
             <div class="crowd-info">
                 <form id="libraylabs" method="get" action="http://librarylabs.ed.ac.uk/games/gameCrowdSourcing.php" target="_blank">
                     <input type="hidden" name="image_id" value="<?php echo $image_id ?>">
@@ -424,10 +383,8 @@ if(isset($solr[$bitstream_field]) && $link_bitstream)
         </div>
 
     <?php }
-
     else {
-
-    ?>
+        ?>
         <div class="crowd-tags">
             <div class="crowd-info">
                 <form id="libraylabs" method="get" action="http://librarylabs.ed.ac.uk/games/gameCrowdSourcing.php" target="_blank">
@@ -440,59 +397,25 @@ if(isset($solr[$bitstream_field]) && $link_bitstream)
         </div>
 
 
-    <?php
+        <?php
     }
-
     $i = 0;
     $newStrip = false;
-    if($numThumbnails > 0) {
 
-        echo '<div class="thumbnail-strip">';
-
-        foreach ($thumbnailLink as $thumb) {
-
-            if ($newStrip) {
-
-                echo '</div><div class="clearfix"></div>';
-                echo '<div class="thumbnail-strip">';
-                echo $thumb;
-                $newStrip = false;
-            } else {
-
-                echo $thumb;
-            }
-
-            $i++;
-
-            // if we're starting a new thumbnail strip
-            if ($i % 4 === 0) {
-                $newStrip = true;
-            }
-        }
-        echo '</div>';
-    }
     echo '<div class="clearfix"></div>';
-
     if(isset($solr[$bitstream_field]) && $link_bitstream)
     {
         echo '<div class="record_bitstreams">';
-
         if($audioFile) {
-
-
             echo '<br>.<br>'.$audioLink;
         }
-
         if($videoFile) {
-
             echo '<br>.<br>'.$videoLink;
         }
         echo '</div>';
         echo '</div><div class="clearfix"></div>';
-
     }
-
-
     ?>
 
     <input type="button" value="Back to Search Results" class="backbtn" onClick="history.go(-1);">
+</div>

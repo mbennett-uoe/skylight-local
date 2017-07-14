@@ -4,11 +4,12 @@
 $config['skylight_hostnames'] = array('www.fairbairn.ac.uk', 'test.fairbairn.ac.uk','test.exampapers.ed.ac.uk', 'exampapers.ed.ac.uk', 'test.scottishgovernmentyearbooks.ed.ac.uk', 'www.scottishgovernmentyearbooks.ed.ac.uk','test.openbooks.is.ed.ac.uk','openbooks.is.ed.ac.uk','test.sopacollection.ph.ed.ac.uk','sopacollection.ph.ed.ac.uk', 'test.exhibitions.ed.ac.uk', 'exhibitions.ed.ac.uk', 'test.lac-projects.is.ed.ac.uk', 'lac-projects.is.ed.ac.uk', 'test.stuartsound.is.ed.acuk', 'www.stuartsound.is.ed.ac.uk');
 
 // Uncomment this if you want to use urls of the form http://.../prefix/...
-$config['skylight_url_prefixes'] = array('mimed', 'art', 'calendars', 'iconics', 'towardsdolly', 'alumni');
+$config['skylight_url_prefixes'] = array('mimed', 'art', 'calendars', 'iconics', 'towardsdolly', 'alumni', 'coimbra', 'public-art');
 
 $config['skylight_handle_prefixes'] = array(3 => "art", 11 => "mimed");
 
 // The URL of the parent solr server
+//$config['skylight_solrbase'] = 'http://localhost:9124/solr/search/';
 $config['skylight_solrbase'] = 'http://collectionssolr.is.ed.ac.uk/search/';
 
 //DSpace handle server prefix

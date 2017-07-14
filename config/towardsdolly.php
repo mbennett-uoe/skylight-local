@@ -89,7 +89,7 @@ $config['skylight_meta_fields'] = array('Title' => 'title',
     'Level' => 'level',);
 
 $config['skylight_recorddisplay'] = array('Identifier','Creator','Dates','Extent','Extent Type','Agent','Subject',
-    'Notes','Rights','Language','Scope and Contents','Related','Bibliography','Physical','Physical Description',
+    'Rights','Language','Scope and Contents','Related','Bibliography','Physical','Physical Description',
     'Access','Alternative Format' );
 
 $config['skylight_searchresult_display'] = array('Title','Creator','Subject','Agent');

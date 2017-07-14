@@ -1,7 +1,6 @@
 <div class="record">
     <div class="content byEditor">
         <h1>Discover over 2,500 works of art collected over 400 years. <a class="heading-link" href="./about">Read more...</a></h1>
-
         <div id="tile-block">
             <a href="./record/20739" alt="S.J. Peploe Nude in Studio Interior" title="S.J. Peploe Nude in Studio Interior"><div id="tile-1" class="art-tile"></div></a>
             <a href="./record/379" alt="Henry Raeburn, John Robison" title="Henry Raeburn, John Robison"><div id="tile-2" class="art-tile"></div></a>

@@ -97,7 +97,7 @@ if(isset($solr[$type_field])) {
         $b_handle = $b_segments[3];
         $b_seq = $b_segments[4];
         $b_handle_id = preg_replace('/^.*\//', '', $b_handle);
-        $uri = './record/' . $b_handle_id . '/' . $b_seq . '/' . $b_filename;
+        $b_uri = './record/' . $b_handle_id . '/' . $b_seq . '/' . $b_filename;
         if (isset($solr[$thumbnail_field])) {
             foreach ($solr[$thumbnail_field] as $thumbnail) {
                 $t_segments = explode("##", $thumbnail);
@@ -106,9 +106,15 @@ if(isset($solr[$type_field])) {
                 $t_seq = $t_segments[4];
                 $handle_id = preg_replace('/^.*\//', '', $t_handle);
                 $t_uri = './record/' . $handle_id . '/' . $t_seq . '/' . $t_filename;
-
-                if ($t_filename == $t_filename . '.jpg') {
+                $b_filename_plus = $b_filename . '.jpg';
+                if ($t_filename == $b_filename_plus) {
                     $jpeg_thumb = strpos($t_filename, '.jpg.jpg');
+                    if ($jpeg_thumb === false) {
+                        $jpeg_thumb = strpos($t_filename, '.JPEG.jpg');
+                    }
+                    if ($jpeg_thumb === false) {
+                        $jpeg_thumb = strpos($t_filename, '.jpeg.jpg');
+                    }
                     if ($jpeg_thumb === false) {
                         $jpeg_thumb = strpos($t_filename, '.JPG.jpg');
                     }
