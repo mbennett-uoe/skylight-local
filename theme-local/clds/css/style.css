@@ -342,6 +342,7 @@ body {
 .main-image {
     padding-top: 10px;
     padding-bottom: 10px;
+    width: 100%;
 }
 
 .btn-custom {
@@ -464,6 +465,11 @@ fieldset[disabled] .btn-custom.active {
     #footer .container {
         width: 320px;
     }
+    #openseadragon {
+        height: 200px;
+        width:100%;
+        text-align:center;
+    }
 }
 
 @media (min-width: 360px) {
@@ -491,6 +497,11 @@ fieldset[disabled] .btn-custom.active {
     #footer .container {
         width: 360px;
     }
+    #openseadragon {
+        height: 200px;
+        width:100%;
+        text-align:center;
+    }
 
 }
 
@@ -517,6 +528,11 @@ fieldset[disabled] .btn-custom.active {
     }
     #footer .container {
         width: 500px;
+    }
+    #openseadragon {
+        height: 300px;
+        width:100%;
+        text-align:center;
     }
 }
 
@@ -561,6 +577,11 @@ fieldset[disabled] .btn-custom.active {
     #footer .container {
         width: 600px;
     }
+    #openseadragon {
+        height: 450px;
+        width:100%;
+        text-align:center;
+    }
 }
 
 
@@ -602,6 +623,11 @@ fieldset[disabled] .btn-custom.active {
     #footer .container {
         width: 870px;
     }
+    #openseadragon {
+        height: 450px;
+        width:100%;
+        text-align:center;
+    }
 }
 
 
@@ -609,41 +635,60 @@ fieldset[disabled] .btn-custom.active {
     .nav {
         text-align: center;
     }
+
     .navbar-brand {
         height: 100px;
     }
+
     .navbar-brand img {
         height: 88px;
         margin: 0;
     }
+
     #navbar-right {
         position: static;
     }
+
     #navbar-right i {
         line-height: 100px;
     }
+
     #navbar-middle li {
-        font-size:16px;
+        font-size: 16px;
     }
+
     #navbar-collapse ul li a {
         padding: 40px 15px;
     }
+
     .tab-h2 {
         font-size: 30px;
     }
+
     .tab-p {
         font-size: 18px;
     }
+
     .tab-col span {
         font-size: 50px;
     }
+
     .footer h3 {
         font-size: 30px;
     }
+
     .footer p {
         font-size: 15px;
     }
+
     #footer .container {
         width: 920px;
     }
+
+    #openseadragon {
+        height: 450px;
+        width:100%;
+        text-align:center;
+    }
+
 }
