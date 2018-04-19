@@ -15,7 +15,7 @@ $config['skylight_url_prefix'] = 'sessionpapers';
 
 // Container ID and the field used in solr index to store this ID. Used for restricting search/browse scope.
 $config['skylight_container_id'] = '70'; # TODO: Obtain / set this
-$config['skylight_container_field'] = 'location.comm';
+$config['skylight_container_field'] = 'location.coll';
 
 $config['skylight_sitemap_type'] = 'internal';
 
