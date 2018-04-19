@@ -19,6 +19,9 @@ $config['skylight_container_field'] = 'location.coll';
 
 $config['skylight_sitemap_type'] = 'internal';
 
+// Override master config while in development
+$config['skylight_solrbase'] = 'http://test.collectionssolr.is.ed.ac.uk/search/';
+
 
 $config['skylight_fields'] = array('Title' => 'dc.title.en',
     'Reference' => 'dc.identifier.other',
